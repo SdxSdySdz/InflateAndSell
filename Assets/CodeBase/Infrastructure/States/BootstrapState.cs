@@ -1,6 +1,9 @@
-﻿using CodeBase.Infrastructure.Services;
+﻿using CodeBase.Constants;
+using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
+using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.States.Core;
 
 namespace CodeBase.Infrastructure.States
@@ -34,7 +37,16 @@ namespace CodeBase.Infrastructure.States
         private void RegisterServices()
         {
             _services.Register<IInputService>(new StandaloneInputService());
-            _services.Register<IFactoryService>(new Factory());
+            
+            _services.Register<IAssetsService>(new AssetsService());
+            
+            _services.Register<IProgressService>(new ProgressService());
+
+            _services.Register<IFactoryService>(new Factory(
+                _services.Get<IAssetsService>(),
+                _services.Get<IProgressService>(),
+                StateMachine
+            ));
         }
 
         private void LoadLevel()

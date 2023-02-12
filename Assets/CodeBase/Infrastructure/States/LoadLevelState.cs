@@ -1,4 +1,5 @@
-﻿using CodeBase.Infrastructure.States.Core;
+﻿using CodeBase.Constants;
+using CodeBase.Infrastructure.States.Core;
 
 namespace CodeBase.Infrastructure.States
 {

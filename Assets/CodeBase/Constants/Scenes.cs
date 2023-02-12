@@ -1,4 +1,4 @@
-﻿namespace CodeBase
+﻿namespace CodeBase.Constants
 {
     public class Scenes
     {

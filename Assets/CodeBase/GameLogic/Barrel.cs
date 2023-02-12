@@ -1,6 +1,8 @@
-﻿namespace CodeBase.Infrastructure.Services.Factory
+﻿using UnityEngine;
+
+namespace CodeBase.GameLogic
 {
-    public class Barrel
+    public class Barrel : MonoBehaviour
     {
     }
 }

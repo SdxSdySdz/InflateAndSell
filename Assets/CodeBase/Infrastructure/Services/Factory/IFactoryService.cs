@@ -1,7 +1,19 @@
-﻿namespace CodeBase.Infrastructure.Services.Factory
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using CodeBase.GameLogic;
+using CodeBase.Infrastructure.Services.Progress;
+using UnityEngine;
+
+namespace CodeBase.Infrastructure.Services.Factory
 {
     public interface IFactoryService : IService
     {
-        Barrel CreateBarrel();
+        List<IProgressReader> ProgressReaders { get; }
+        List<IProgressWriter> ProgressWriters { get; }
+        
+        void Cleanup();
+        Task WarmUp();
+        
+        Task<Barrel> CreateBarrel();
     }
 }
