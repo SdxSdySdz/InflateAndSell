@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.States.Core
@@ -16,7 +18,11 @@ namespace CodeBase.Infrastructure.States.Core
             _states = new Dictionary<Type, IState>()
             {
                 { typeof(BootstrapState), new BootstrapState(this, sceneLoader, services) },
-                { typeof(LoadProgressState), new LoadProgressState(this) },
+                { typeof(LoadProgressState), new LoadProgressState(
+                    this, 
+                    services.Get<IProgressService>(),
+                    services.Get<ISaveLoadService>()) 
+                },
                 { typeof(LoadLevelState), new LoadLevelState(this, sceneLoader) },
                 { typeof(GameLoopState), new GameLoopState(this) },
             };

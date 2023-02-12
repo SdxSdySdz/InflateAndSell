@@ -7,5 +7,11 @@ namespace CodeBase.Data
     {
         public HoseProgress HoseProgress;
         public LeverProgress LeverProgress;
+
+        public PlayerProgress()
+        {
+            HoseProgress = new HoseProgress();
+            LeverProgress = new LeverProgress();
+        }
     }
 }

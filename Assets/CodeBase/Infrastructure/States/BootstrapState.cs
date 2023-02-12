@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.States.Core;
 
 namespace CodeBase.Infrastructure.States
@@ -46,6 +47,11 @@ namespace CodeBase.Infrastructure.States
                 _services.Get<IAssetsService>(),
                 _services.Get<IProgressService>(),
                 StateMachine
+            ));
+
+            _services.Register<ISaveLoadService>(new SaveLoadService(
+                _services.Get<IProgressService>(),
+                _services.Get<IFactoryService>()
             ));
         }
 
