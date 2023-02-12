@@ -5,10 +5,8 @@ namespace CodeBase.GameLogic.Upgrading
 {
     public class Hose : MultiplierBasedUpgradeable
     {
-        protected override float GetNextValue(float currentValue)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected override float BaseValue => 1f;
+        protected override float Multiplier => 1.11f;
 
         protected override int ReadLevel(PlayerProgress progress)
         {

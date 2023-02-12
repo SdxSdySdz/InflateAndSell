@@ -6,12 +6,15 @@ namespace CodeBase.GameLogic.Upgrading
 {
     public abstract class MultiplierBasedUpgradeable : MonoBehaviour, IUpgradeable, IProgressReader, IProgressWriter
     {
-        private float _baseValue;
+        private float _currentValue;
         private int _level;
+        
+        protected abstract float BaseValue { get; }
+        protected abstract float Multiplier { get; }
         
         public void Upgrade()
         {
-            _baseValue = GetNextValue(_baseValue);
+            _currentValue = GetNextValue(_currentValue);
         }
         
         public void LoadProgress(PlayerProgress progress)
@@ -23,9 +26,13 @@ namespace CodeBase.GameLogic.Upgrading
         {
             WriteLevel(progress, _level);
         }
-
-        protected abstract float GetNextValue(float currentValue);
+        
         protected abstract int ReadLevel(PlayerProgress progress);
         protected abstract void WriteLevel(PlayerProgress progress, int level);
+        
+        private float GetNextValue(float currentValue)
+        {
+            return currentValue * Mathf.Pow(Multiplier, _level);
+        }
     }
 }
