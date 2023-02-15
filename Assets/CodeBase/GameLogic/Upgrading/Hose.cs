@@ -1,10 +1,12 @@
 ﻿using CodeBase.Data;
-using CodeBase.Infrastructure.Services.Progress;
 
 namespace CodeBase.GameLogic.Upgrading
 {
     public class Hose : MultiplierBasedUpgradeable
     {
+        public float PassingVolume => CurrentValue;
+
+        
         protected override float BaseValue => 1f;
         protected override float Multiplier => 1.11f;
 

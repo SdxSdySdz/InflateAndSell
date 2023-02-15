@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Factory;
+using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
@@ -23,8 +25,13 @@ namespace CodeBase.Infrastructure.States.Core
                     services.Get<IProgressService>(),
                     services.Get<ISaveLoadService>()) 
                 },
-                { typeof(LoadLevelState), new LoadLevelState(this, sceneLoader) },
-                { typeof(GameLoopState), new GameLoopState(this) },
+                { typeof(LoadLevelState), new LoadLevelState(
+                    this, 
+                    sceneLoader, 
+                    services.Get<IFactoryService>(),
+                    services.Get<IProgressService>()
+                    ) },
+                { typeof(GameLoopState), new GameLoopState(this, services.Get<IInputService>()) },
             };
         }
 

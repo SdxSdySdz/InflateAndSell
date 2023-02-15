@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CodeBase.Constants;
 using CodeBase.GameLogic;
+using CodeBase.GameLogic.Upgrading;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.States.Core;
@@ -25,9 +26,8 @@ namespace CodeBase.Infrastructure.Services.Factory
             _stateMachine = stateMachine;
         }
 
-
-        public List<IProgressReader> ProgressReaders { get; } = new List<IProgressReader>();
-        public List<IProgressWriter> ProgressWriters { get; } = new List<IProgressWriter>();
+        public List<IProgressReader> ProgressReaders { get; } = new();
+        public List<IProgressWriter> ProgressWriters { get; } = new();
 
         public async Task WarmUp()
         {
@@ -40,9 +40,16 @@ await _assets.Load<GameObject>(AssetAddress.Spawner);*/
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
             Barrel barrel = InstantiateRegistered(prefab).GetComponent<Barrel>();
 
-// barrel.Construct();
-
             return barrel;
+        }
+
+        public async Task<Pump> CreatePump()
+        {
+            GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
+            
+            Pump pump = InstantiateRegistered(prefab).GetComponent<Pump>();
+            
+            return pump;
         }
 
         private void Register(IProgressInteractor progressInteractor)
