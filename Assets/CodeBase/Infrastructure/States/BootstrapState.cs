@@ -5,7 +5,9 @@ using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.Infrastructure.Services.SDK;
 using CodeBase.Infrastructure.States.Core;
+using UnityEngine;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -28,7 +30,7 @@ namespace CodeBase.Infrastructure.States
 
         public void Enter()
         {
-            _sceneLoader.Load(Scenes.Main, LoadLevel);
+            _services.Get<IYandexGamesService>().Initialize(OnYandexInitialized);
         }
 
         public void Exit()
@@ -37,6 +39,8 @@ namespace CodeBase.Infrastructure.States
 
         private void RegisterServices()
         {
+            _services.Register<IYandexGamesService>(new YandexGamesService());
+            
             _services.Register<IInputService>(new StandaloneInputService());
             
             _services.Register<IAssetsService>(new AssetsService());
@@ -55,6 +59,12 @@ namespace CodeBase.Infrastructure.States
             ));
         }
 
+        private void OnYandexInitialized()
+        {
+            Debug.LogError("YandexInit");
+            _sceneLoader.Load(Scenes.Main, LoadLevel);
+        }
+        
         private void LoadLevel()
         {
             StateMachine.Enter<LoadProgressState>();

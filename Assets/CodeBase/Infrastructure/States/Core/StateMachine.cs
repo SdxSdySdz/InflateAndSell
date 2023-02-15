@@ -42,7 +42,7 @@ namespace CodeBase.Infrastructure.States.Core
             _currentState?.Exit();
             
             TState newState = GetState<TState>();
-            Debug.LogError($"=== Enter {newState.GetType().Name} ===");
+            Debug.Log($"=== Enter {newState.GetType().Name} ===");
 
             newState.Enter();
 

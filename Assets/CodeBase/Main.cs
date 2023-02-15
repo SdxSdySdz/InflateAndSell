@@ -1,4 +1,6 @@
-﻿using CodeBase.GameLogic;
+﻿using System.Collections;
+using Agava.YandexGames;
+using CodeBase.GameLogic;
 using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.States;
 using UnityEngine;
@@ -11,10 +13,16 @@ namespace CodeBase
 
         private void Awake()
         {
+            YandexGamesSdk.CallbackLogging = true;
+        }
+
+        private IEnumerator Start()
+        {
             _game = new Game(this);
             _game.StateMachine.Enter<BootstrapState>();
 
             DontDestroyOnLoad(this);
-        } 
+            yield break;
+        }
     }
 }

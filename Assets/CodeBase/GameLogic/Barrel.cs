@@ -26,7 +26,6 @@ namespace CodeBase.GameLogic
         public void Fill(float volume, float pushDuration)
         {
             _capacity.Fill(volume);
-
             ProvideInflation(pushDuration);
         }
 
