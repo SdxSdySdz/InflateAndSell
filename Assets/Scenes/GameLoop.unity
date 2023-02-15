@@ -1179,6 +1179,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpgradeLeverButton
       objectReference: {fileID: 0}
+    - target: {fileID: 2082264635702603875, guid: cf40fdbdf06c8491aa33f7d6edc813fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf40fdbdf06c8491aa33f7d6edc813fb, type: 3}
 --- !u!1 &870812146
@@ -2172,6 +2177,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UpgradeHoseButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2082264635702603875, guid: cf40fdbdf06c8491aa33f7d6edc813fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf40fdbdf06c8491aa33f7d6edc813fb, type: 3}
