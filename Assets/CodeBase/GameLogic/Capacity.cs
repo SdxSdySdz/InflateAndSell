@@ -11,12 +11,12 @@ namespace CodeBase.GameLogic
         public Capacity(float maxVolume)
         {
             MaxVolume = maxVolume;
+            IsOverflowed = false;
         }
-
+        
+        public bool IsOverflowed { get; private set; }
         public float FillingRatio => _currentVolume / MaxVolume;
         
-        public event Action Overflowed; 
-
         public void Fill(float volume)
         {
             if (volume < 0)
@@ -27,7 +27,7 @@ namespace CodeBase.GameLogic
             if (_currentVolume >= MaxVolume)
             {
                 _currentVolume = MaxVolume;
-                Overflowed?.Invoke();
+                IsOverflowed = true;
             }
         }
     }

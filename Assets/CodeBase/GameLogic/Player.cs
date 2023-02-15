@@ -11,31 +11,43 @@ namespace CodeBase.GameLogic
         [SerializeField] private Pump _pump;
         
         private IInputService _inputService;
+        private bool _isInputEnabled;
         
         public Pump Pump => _pump;
 
         public void Construct(IInputService inputService)
         {
             _inputService = inputService;
+            EnableInput();
         }
 
         private void Update()
         {
-            if (_inputService == null)
+            if (_inputService == null || _isInputEnabled == false)
                 return;
 
             if (_inputService.IsClicked(out ClickTarget clickTarget))
             {
                 if (clickTarget == ClickTarget.UI)
                     return;
-                    
-                _pump.PumpUp();
+                
+                _pump.PumpUp(onStartPumpingUp: DisableInput, onEndPumpingUp: EnableInput);
             }
         }
 
         public void Take(Barrel barrel)
         {
             _pump.Connect(barrel);
+        }
+
+        private void DisableInput()
+        {
+            _isInputEnabled = false;
+        }
+
+        private void EnableInput()
+        {
+            _isInputEnabled = true;
         }
     }
 }

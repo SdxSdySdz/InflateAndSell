@@ -38,14 +38,12 @@ namespace CodeBase.Infrastructure.States.Core
         public void Enter<TState>()
             where TState : class, IIndependentState
         {
-
             _currentState?.Exit();
             
             TState newState = GetState<TState>();
             Debug.Log($"=== Enter {newState.GetType().Name} ===");
 
             newState.Enter();
-
 
             _currentState = newState;
         }

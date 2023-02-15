@@ -1,4 +1,5 @@
-﻿using CodeBase.Data;
+﻿using System;
+using CodeBase.Data;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Progress;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace CodeBase.GameLogic.Upgrading
         [SerializeField] private Lever _lever;
 
         private Barrel _barrel;
-        
+
         public Hose Hose => _hose;
         public Lever Lever => _lever;
 
@@ -26,9 +27,9 @@ namespace CodeBase.GameLogic.Upgrading
             _lever.Upgrade();
         }
 
-        public void PumpUp()
+        public void PumpUp(Action onStartPumpingUp, Action onEndPumpingUp)
         {
-            _barrel.Fill(_hose.PassingVolume, _lever.PushDuration);
+            _barrel.Fill(_hose.PassingVolume, _lever.PushDuration, onStartPumpingUp, onEndPumpingUp);
         }
     }
 }
