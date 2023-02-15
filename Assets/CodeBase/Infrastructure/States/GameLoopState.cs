@@ -26,12 +26,6 @@ namespace CodeBase.Infrastructure.States
             Barrel barrel = Object.FindObjectOfType<Barrel>();
             barrel.Construct(new Capacity(5));
 
-            HoseUpgradingButton hoseUpgradingButton = Object.FindObjectOfType<HoseUpgradingButton>();
-            hoseUpgradingButton.Construct(_player.Pump.Hose);
-            
-            LeverUpgradingButton leverUpgradingButton = Object.FindObjectOfType<LeverUpgradingButton>();
-            leverUpgradingButton.Construct(_player.Pump.Lever);
-            
             _player.Take(barrel);
         }
 

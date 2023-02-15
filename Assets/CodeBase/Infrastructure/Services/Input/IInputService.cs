@@ -4,10 +4,4 @@
     {
         bool IsClicked(out ClickTarget clickTarget);
     }
-
-    public enum ClickTarget
-    {
-        Unknown,
-        UI,
-    }
 }

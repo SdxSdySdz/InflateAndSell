@@ -1,4 +1,5 @@
-﻿using UnityEngine.EventSystems;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace CodeBase.Infrastructure.Services.Input
 {
@@ -6,8 +7,11 @@ namespace CodeBase.Infrastructure.Services.Input
     {
         public bool IsClicked(out ClickTarget clickTarget)
         {
-            clickTarget = EventSystem.current.currentSelectedGameObject ? ClickTarget.UI : ClickTarget.Unknown;
-
+            if (EventSystem.current != null)
+                clickTarget = EventSystem.current.currentSelectedGameObject ? ClickTarget.UI : ClickTarget.Unknown;
+            else
+                clickTarget = ClickTarget.Unknown;
+            
             return UnityEngine.Input.GetMouseButtonDown(0);
         }
     }

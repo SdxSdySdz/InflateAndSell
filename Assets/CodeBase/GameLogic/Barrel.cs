@@ -32,7 +32,6 @@ namespace CodeBase.GameLogic
 
         private void OnOverflowed()
         {
-            Debug.LogError($"Barrel is overflowed");
             Overflowed?.Invoke();
         }
 
