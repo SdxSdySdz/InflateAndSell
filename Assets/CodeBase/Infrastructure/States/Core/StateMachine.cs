@@ -31,7 +31,11 @@ namespace CodeBase.Infrastructure.States.Core
                     services.Get<IFactoryService>(),
                     services.Get<IProgressService>()
                     ) },
-                { typeof(GameLoopState), new GameLoopState(this, services.Get<IInputService>()) },
+                { typeof(GameLoopState), new GameLoopState(
+                    this, 
+                    services.Get<IFactoryService>(),
+                    services.Get<IInputService>()
+                    ) },
             };
         }
 

@@ -35,10 +35,13 @@ namespace CodeBase.Infrastructure.Services.Factory
 await _assets.Load<GameObject>(AssetAddress.Spawner);*/
         }
 
-        public async Task<Barrel> CreateBarrel()
+        public async Task<Barrel> CreateBarrel(Vector3 position)
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
             Barrel barrel = InstantiateRegistered(prefab).GetComponent<Barrel>();
+            barrel.Construct(new Capacity(5));
+            
+            barrel.transform.position = position;
 
             return barrel;
         }

@@ -15,7 +15,7 @@ namespace CodeBase.Infrastructure.Services.Factory
         void Cleanup();
         Task WarmUp();
         
-        Task<Barrel> CreateBarrel();
+        Task<Barrel> CreateBarrel(Vector3 position);
         Task<Pump> CreatePump();
     }
 }

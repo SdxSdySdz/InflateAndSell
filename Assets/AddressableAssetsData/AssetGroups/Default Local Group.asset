@@ -16,7 +16,11 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 60b6829c01c2d8840b041411e0b415bc
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 61e9fde76c07e3942a0547afcaf8b5a4
+    m_Address: Assets/Prefabs/Barrel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a9b0924aeddb0914b88a596cf4b3c743, type: 2}
   m_SchemaSet:
