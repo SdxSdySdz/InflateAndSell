@@ -5,12 +5,27 @@ namespace CodeBase.Infrastructure.Services.Input
 {
     public class StandaloneInputService : IInputService
     {
+        private bool _isEnabled;
+        
+        public void Enable()
+        {
+            _isEnabled = true;
+        }
+
+        public void Disable()
+        {
+            _isEnabled = false;
+        }
+
         public bool IsClicked(out ClickTarget clickTarget)
         {
+            clickTarget = ClickTarget.Unknown;
+            
+            if (_isEnabled == false)
+                return false;
+            
             if (EventSystem.current != null)
                 clickTarget = EventSystem.current.currentSelectedGameObject ? ClickTarget.UI : ClickTarget.Unknown;
-            else
-                clickTarget = ClickTarget.Unknown;
             
             return UnityEngine.Input.GetMouseButtonDown(0);
         }

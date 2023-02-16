@@ -1,9 +1,7 @@
 ﻿using CodeBase.GameLogic;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.States.Core;
-using CodeBase.UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -22,18 +20,14 @@ namespace CodeBase.Infrastructure.States
 
         public void Enter()
         {
+            _inputService.Enable();
+            
             _player = Object.FindObjectOfType<Player>();
             _player.Construct(_inputService);
             
-            _barrel = Object.FindObjectOfType<Barrel>();
-            _barrel.Construct(new Capacity(5));
+            PrepareNewBarrel();
             
             _hands = Object.FindObjectOfType<Hands>();
-
-            
-            _player.Take(_barrel);
-
-            _barrel.Overflowed += PickUpBarrel;
         }
 
         public void Exit()
@@ -43,7 +37,24 @@ namespace CodeBase.Infrastructure.States
 
         private void PickUpBarrel()
         {
-            _hands.PickUp(_barrel);
+            _hands.PickUp(_barrel, onStart: DisableInput, onFinish: PrepareNewBarrel);
+        }
+
+        private void PrepareNewBarrel()
+        {
+            if (_barrel != null)
+                _barrel.Overflowed -= PickUpBarrel;
+            
+            _barrel = Object.FindObjectOfType<Barrel>();
+            _barrel.Construct(new Capacity(5));
+            
+            _player.Take(_barrel);
+            _barrel.Overflowed += PickUpBarrel;
+        }
+
+        private void DisableInput()
+        {
+            _inputService.Disable();
         }
     }
 }

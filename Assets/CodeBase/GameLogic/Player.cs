@@ -1,8 +1,6 @@
-﻿using System;
-using CodeBase.GameLogic.Upgrading;
+﻿using CodeBase.GameLogic.Upgrading;
 using CodeBase.Infrastructure.Services.Input;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace CodeBase.GameLogic
 {
@@ -11,7 +9,6 @@ namespace CodeBase.GameLogic
         [SerializeField] private Pump _pump;
         
         private IInputService _inputService;
-        private bool _isInputEnabled;
         
         public Pump Pump => _pump;
 
@@ -23,7 +20,7 @@ namespace CodeBase.GameLogic
 
         private void Update()
         {
-            if (_inputService == null || _isInputEnabled == false)
+            if (_inputService == null)
                 return;
 
             if (_inputService.IsClicked(out ClickTarget clickTarget) && clickTarget != ClickTarget.UI)
@@ -37,12 +34,12 @@ namespace CodeBase.GameLogic
 
         private void DisableInput()
         {
-            _isInputEnabled = false;
+            _inputService.Disable();
         }
 
         private void EnableInput()
         {
-            _isInputEnabled = true;
+            _inputService.Enable();
         }
     }
 }
