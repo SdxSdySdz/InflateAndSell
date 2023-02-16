@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using CodeBase.GameLogic;
+﻿using CodeBase.GameLogic;
 using CodeBase.GameLogic.SpawnPoints;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
@@ -30,13 +29,7 @@ namespace CodeBase.Infrastructure.States
         public void Enter()
         {
             InitWorld();
-            
-            _player = Object.FindObjectOfType<Player>();
-            _player.Construct(_inputService);
-            
-            PrepareNewBarrel();
-            
-            _hands = Object.FindObjectOfType<Hands>();
+            _inputService.Enable();
         }
 
         public void Exit()
@@ -46,12 +39,35 @@ namespace CodeBase.Infrastructure.States
 
         private void InitWorld()
         {
+            InitSpawns();
+
+            _player = Object.FindObjectOfType<Player>();
+            _player.Construct(_inputService);
+            
+            _hands = Object.FindObjectOfType<Hands>();
+            
+            PrepareNewBarrel();
+        }
+
+        private void InitSpawns()
+        {
             _barrelSpawn = Object.FindObjectOfType<BarrelSpawn>();
         }
 
         private void PickUpBarrel()
         {
-            _hands.PickUp(_barrel, onStart: DisableInput, onFinish: PrepareNewBarrel);
+            _hands.PickUp(_barrel, onStart: DisableInput, onFinish: OnBarrelPickedUp);
+        }
+
+        private void DisableInput()
+        {
+            _inputService.Disable();
+        }
+
+        private void OnBarrelPickedUp()
+        {
+            PrepareNewBarrel();
+            _inputService.Enable();
         }
 
         private async void PrepareNewBarrel()
@@ -66,13 +82,6 @@ namespace CodeBase.Infrastructure.States
             
             _player.Take(_barrel);
             _barrel.Overflowed += PickUpBarrel;
-            
-            _inputService.Enable();
-        }
-
-        private void DisableInput()
-        {
-            _inputService.Disable();
         }
     }
 }

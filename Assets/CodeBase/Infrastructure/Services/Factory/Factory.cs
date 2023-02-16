@@ -4,6 +4,7 @@ using CodeBase.Constants;
 using CodeBase.GameLogic;
 using CodeBase.GameLogic.Upgrading;
 using CodeBase.Infrastructure.Services.Assets;
+using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.States.Core;
 using UnityEngine;
@@ -31,8 +32,7 @@ namespace CodeBase.Infrastructure.Services.Factory
 
         public async Task WarmUp()
         {
-/*await _assets.Load<GameObject>(AssetAddress.Loot);
-await _assets.Load<GameObject>(AssetAddress.Spawner);*/
+            await _assets.Load<GameObject>(AssetAddress.Barrel);
         }
 
         public async Task<Barrel> CreateBarrel(Vector3 position)
@@ -44,15 +44,6 @@ await _assets.Load<GameObject>(AssetAddress.Spawner);*/
             barrel.transform.position = position;
 
             return barrel;
-        }
-
-        public async Task<Pump> CreatePump()
-        {
-            GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
-            
-            Pump pump = InstantiateRegistered(prefab).GetComponent<Pump>();
-            
-            return pump;
         }
 
         private void Register(IProgressInteractor progressInteractor)
