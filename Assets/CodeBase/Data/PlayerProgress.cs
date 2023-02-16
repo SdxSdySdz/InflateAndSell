@@ -5,13 +5,15 @@ namespace CodeBase.Data
     [Serializable]
     public class PlayerProgress
     {
-        public HoseProgress HoseProgress;
-        public LeverProgress LeverProgress;
+        public HoseProgress Hose;
+        public LeverProgress Lever;
+        public WalletProgress Wallet;
 
         public PlayerProgress()
         {
-            HoseProgress = new HoseProgress();
-            LeverProgress = new LeverProgress();
+            Hose = new HoseProgress();
+            Lever = new LeverProgress();
+            Wallet = new WalletProgress();
         }
     }
 }

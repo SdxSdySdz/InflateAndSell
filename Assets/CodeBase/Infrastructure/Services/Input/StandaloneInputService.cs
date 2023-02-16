@@ -6,6 +6,11 @@ namespace CodeBase.Infrastructure.Services.Input
     public class StandaloneInputService : IInputService
     {
         private bool _isEnabled;
+
+        public StandaloneInputService()
+        {
+            Disable();
+        }
         
         public void Enable()
         {

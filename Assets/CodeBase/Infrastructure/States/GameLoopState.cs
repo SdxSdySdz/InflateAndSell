@@ -11,6 +11,7 @@ namespace CodeBase.Infrastructure.States
     {
         private readonly IFactoryService _factoryService;
         private readonly IInputService _inputService;
+        private readonly Market _market;
 
         private Player _player;
         private Barrel _barrel;
@@ -18,56 +19,27 @@ namespace CodeBase.Infrastructure.States
         private BarrelSpawn _barrelSpawn;
 
         public GameLoopState(
-            StateMachine stateMachine, 
-            IFactoryService factoryService, 
+            StateMachine stateMachine,
+            IFactoryService factoryService,
             IInputService inputService) : base(stateMachine)
         {
             _factoryService = factoryService;
             _inputService = inputService;
+            _market = new Market();
         }
 
         public void Enter()
         {
-            InitWorld();
+            _player = Object.FindObjectOfType<Player>();
+            _hands = Object.FindObjectOfType<Hands>();
+            _barrelSpawn = Object.FindObjectOfType<BarrelSpawn>();
+            
+            PrepareNewBarrel();
             _inputService.Enable();
         }
 
         public void Exit()
         {
-            
-        }
-
-        private void InitWorld()
-        {
-            InitSpawns();
-
-            _player = Object.FindObjectOfType<Player>();
-            _player.Construct(_inputService);
-            
-            _hands = Object.FindObjectOfType<Hands>();
-            
-            PrepareNewBarrel();
-        }
-
-        private void InitSpawns()
-        {
-            _barrelSpawn = Object.FindObjectOfType<BarrelSpawn>();
-        }
-
-        private void PickUpBarrel()
-        {
-            _hands.PickUp(_barrel, onStart: DisableInput, onFinish: OnBarrelPickedUp);
-        }
-
-        private void DisableInput()
-        {
-            _inputService.Disable();
-        }
-
-        private void OnBarrelPickedUp()
-        {
-            PrepareNewBarrel();
-            _inputService.Enable();
         }
 
         private async void PrepareNewBarrel()
@@ -79,9 +51,31 @@ namespace CodeBase.Infrastructure.States
             }
 
             _barrel = await _factoryService.CreateBarrel(_barrelSpawn.transform.position);
-            
+
             _player.Take(_barrel);
             _barrel.Overflowed += PickUpBarrel;
+        }
+        
+        private void PickUpBarrel()
+        {
+            _hands.PickUp(_barrel, onStart: DisableInput, onFinish: OnBarrelPickedUp);
+        }
+        
+        private void DisableInput()
+        {
+            _inputService.Disable();
+        }
+
+        private void OnBarrelPickedUp()
+        {
+            SellCurrentBarrel();
+            PrepareNewBarrel();
+            _inputService.Enable();
+        }
+
+        private void SellCurrentBarrel()
+        {
+            _player.Wallet.Add(_market.Sell(_barrel));
         }
     }
 }

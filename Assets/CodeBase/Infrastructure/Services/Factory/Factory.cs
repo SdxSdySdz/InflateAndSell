@@ -6,7 +6,6 @@ using CodeBase.GameLogic.Upgrading;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
-using CodeBase.Infrastructure.States.Core;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.Factory
@@ -14,17 +13,10 @@ namespace CodeBase.Infrastructure.Services.Factory
     public class Factory : IFactoryService
     {
         private readonly IAssetsService _assets;
-        private readonly IProgressService _persistentProgressService;
-        private readonly StateMachine _stateMachine;
 
-        public Factory(
-            IAssetsService assets,
-            IProgressService persistentProgressService,
-            StateMachine stateMachine)
+        public Factory(IAssetsService assets)
         {
             _assets = assets;
-            _persistentProgressService = persistentProgressService;
-            _stateMachine = stateMachine;
         }
 
         public List<IProgressReader> ProgressReaders { get; } = new();
@@ -44,6 +36,16 @@ namespace CodeBase.Infrastructure.Services.Factory
             barrel.transform.position = position;
 
             return barrel;
+        }
+
+        public async Task<Player> CreatePlayer(Wallet wallet, Pump pump, IInputService inputService)
+        {
+            GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Player);
+            
+            Player player = InstantiateRegistered(prefab).GetComponent<Player>();
+            player.Construct(wallet, pump, inputService);
+            
+            return player;
         }
 
         private void Register(IProgressInteractor progressInteractor)

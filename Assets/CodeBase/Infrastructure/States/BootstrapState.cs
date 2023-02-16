@@ -7,7 +7,6 @@ using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.Services.SDK;
 using CodeBase.Infrastructure.States.Core;
-using UnityEngine;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -47,11 +46,7 @@ namespace CodeBase.Infrastructure.States
             
             _services.Register<IProgressService>(new ProgressService());
 
-            _services.Register<IFactoryService>(new Factory(
-                _services.Get<IAssetsService>(),
-                _services.Get<IProgressService>(),
-                StateMachine
-            ));
+            _services.Register<IFactoryService>(new Factory(_services.Get<IAssetsService>()));
 
             _services.Register<ISaveLoadService>(new SaveLoadService(
                 _services.Get<IProgressService>(),
@@ -61,7 +56,6 @@ namespace CodeBase.Infrastructure.States
 
         private void OnYandexInitialized()
         {
-            Debug.LogError("YandexInit");
             _sceneLoader.Load(Scenes.Main, LoadLevel);
         }
         

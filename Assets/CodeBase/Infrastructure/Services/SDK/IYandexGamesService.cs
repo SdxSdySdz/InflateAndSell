@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Agava.YandexGames;
 
 namespace CodeBase.Infrastructure.Services.SDK
 {

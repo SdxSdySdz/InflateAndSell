@@ -1,20 +1,27 @@
-﻿using CodeBase.GameLogic.Upgrading;
+﻿using CodeBase.Data;
+using CodeBase.GameLogic.Upgrading;
 using CodeBase.Infrastructure.Services.Input;
+using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.GameLogic
 {
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviour, IProgressReader, IProgressWriter
     {
-        [SerializeField] private Pump _pump;
-        
+        private Wallet _wallet;
+        private Pump _pump;
         private IInputService _inputService;
-        
-        public Pump Pump => _pump;
+        private ISaveLoadService _saveLoadService;
 
-        public void Construct(IInputService inputService)
+        public Wallet Wallet => _wallet;
+        
+        public void Construct(Wallet wallet, Pump pump, IInputService inputService)
         {
+            _wallet = wallet;
+            _pump = pump;
             _inputService = inputService;
+
             EnableInput();
         }
 
@@ -31,15 +38,25 @@ namespace CodeBase.GameLogic
         {
             _pump.Connect(barrel);
         }
-
-        private void DisableInput()
+        
+        public void LoadProgress(PlayerProgress progress)
         {
-            _inputService.Disable();
+            _wallet.Construct(progress.Wallet.Amount);
+        }
+
+        public void UpdateProgress(PlayerProgress progress)
+        {
+            progress.Wallet.Amount = _wallet.Amount;
         }
 
         private void EnableInput()
         {
             _inputService.Enable();
+        }
+
+        private void DisableInput()
+        {
+            _inputService.Disable();
         }
     }
 }

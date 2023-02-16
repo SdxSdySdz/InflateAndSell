@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Barrel.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: e4ea979eac3367e4ea3255867189021d
+    m_Address: Assets/Prefabs/Player.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a9b0924aeddb0914b88a596cf4b3c743, type: 2}
   m_SchemaSet:

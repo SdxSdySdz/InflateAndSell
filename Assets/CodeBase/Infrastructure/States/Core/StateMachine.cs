@@ -29,7 +29,8 @@ namespace CodeBase.Infrastructure.States.Core
                     this, 
                     sceneLoader, 
                     services.Get<IFactoryService>(),
-                    services.Get<IProgressService>()
+                    services.Get<IProgressService>(),
+                    services.Get<IInputService>()
                     ) },
                 { typeof(GameLoopState), new GameLoopState(
                     this, 

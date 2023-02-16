@@ -1,6 +1,4 @@
 ﻿using CodeBase.Data;
-using CodeBase.Infrastructure.Services.Progress;
-using UnityEngine;
 
 namespace CodeBase.GameLogic.Upgrading
 {
@@ -8,17 +6,17 @@ namespace CodeBase.GameLogic.Upgrading
     {
         public float PushDuration => CurrentValue;
 
-        protected override float BaseValue => 1f;
+        protected override float BaseValue => 0.5f;
         protected override float Multiplier => 0.89f;
 
         protected override int ReadLevel(PlayerProgress progress)
         {
-            return progress.LeverProgress.Level;
+            return progress.Lever.Level;
         }
 
         protected override void WriteLevel(PlayerProgress progress, int level)
         {
-            progress.LeverProgress.Level = level;
+            progress.Lever.Level = level;
         }
     }
 }
