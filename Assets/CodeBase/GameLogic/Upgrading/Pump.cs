@@ -27,9 +27,9 @@ namespace CodeBase.GameLogic.Upgrading
             _lever.Upgrade();
         }
 
-        public void PumpUp(Action onStartPumpingUp, Action onEndPumpingUp)
+        public void PumpUp(Action onStart, Action onFinish)
         {
-            _barrel.Fill(_hose.PassingVolume, _lever.PushDuration, onStartPumpingUp, onEndPumpingUp);
+            _barrel.Fill(_hose.PassingVolume, _lever.PushDuration, onStart, onFinish);
         }
     }
 }

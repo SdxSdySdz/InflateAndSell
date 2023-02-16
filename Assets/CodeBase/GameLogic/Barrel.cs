@@ -10,10 +10,17 @@ namespace CodeBase.GameLogic
         [SerializeField] private Transform _model;
         [SerializeField] private Vector3 _startScale;
         [SerializeField] private Vector3 _endScale;
+
+        [Header("Handles")] 
+        [SerializeField] private Transform _leftHandle;
+        [SerializeField] private Transform _rightHandle;
         
         private Capacity _capacity;
         private Coroutine _fillingCoroutine;
 
+        public Vector3 LeftHandlePosition => _leftHandle.position;
+        public Vector3 RightHandlePosition => _rightHandle.position;
+        
         public event UnityAction Overflowed;
         
         public void Construct(Capacity capacity)

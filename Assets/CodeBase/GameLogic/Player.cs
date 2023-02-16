@@ -26,13 +26,8 @@ namespace CodeBase.GameLogic
             if (_inputService == null || _isInputEnabled == false)
                 return;
 
-            if (_inputService.IsClicked(out ClickTarget clickTarget))
-            {
-                if (clickTarget == ClickTarget.UI)
-                    return;
-                
-                _pump.PumpUp(onStartPumpingUp: DisableInput, onEndPumpingUp: EnableInput);
-            }
+            if (_inputService.IsClicked(out ClickTarget clickTarget) && clickTarget != ClickTarget.UI)
+                _pump.PumpUp(onStart: DisableInput, onFinish: EnableInput);
         }
 
         public void Take(Barrel barrel)
