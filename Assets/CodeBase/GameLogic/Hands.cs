@@ -10,9 +10,15 @@ namespace CodeBase.GameLogic
         [SerializeField] private float _pickingDuration;
         [SerializeField] private Transform _leftHand;
         [SerializeField] private Transform _rightHand;
+        [SerializeField] private ParticleSystem _moneyParticles;
         
         private Coroutine _pickingCoroutine;
-        
+
+        private void Awake()
+        {
+            _moneyParticles.Stop();
+        }
+
         public void PickUp(Barrel barrel, Action onStart = null, Action onFinish = null)
         {
             if (_pickingCoroutine != null)
@@ -45,7 +51,7 @@ namespace CodeBase.GameLogic
                 yield return waitForEndOfFrame;
             } while (isNotFinished);
 
-            
+            ThrowMoney();
             onFinish?.Invoke();
         }
 
@@ -80,6 +86,11 @@ namespace CodeBase.GameLogic
             }
 
             hand.position = targetPosition;
+        }
+
+        private void ThrowMoney()
+        {
+            _moneyParticles.Play();
         }
     }
 }
