@@ -10,13 +10,13 @@ namespace CodeBase.GameLogic
         [SerializeField] private float _pickingDuration;
         [SerializeField] private Transform _leftHand;
         [SerializeField] private Transform _rightHand;
-        [SerializeField] private ParticleSystem _moneyParticles;
+        [SerializeField] private MoneyEffect _moneyEffect;
         
         private Coroutine _pickingCoroutine;
 
         private void Awake()
         {
-            _moneyParticles.Stop();
+            _moneyEffect.Stop();
         }
 
         public void PickUp(Barrel barrel, Action onStart = null, Action onFinish = null)
@@ -90,7 +90,7 @@ namespace CodeBase.GameLogic
 
         private void ThrowMoney()
         {
-            _moneyParticles.Play();
+            _moneyEffect.Play();
         }
     }
 }
