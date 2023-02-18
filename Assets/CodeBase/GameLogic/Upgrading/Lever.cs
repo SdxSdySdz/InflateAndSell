@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using CodeBase.Data;
+using TMPro;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.Upgrading
@@ -8,6 +10,7 @@ namespace CodeBase.GameLogic.Upgrading
     {
         [SerializeField] private Transform _model;
         [SerializeField] private float _pumpingOffset;
+        [SerializeField] private Sound _sound;
         
         public float PushDuration => CurrentValue;
         
@@ -21,6 +24,7 @@ namespace CodeBase.GameLogic.Upgrading
         
         public IEnumerator PullDown()
         {
+            _sound.Play();
             return Move(-_pumpingOffset, PushDuration);
         }
 
@@ -33,6 +37,8 @@ namespace CodeBase.GameLogic.Upgrading
         {
             progress.Lever.Level = level;
         }
+
+       
 
         private IEnumerator Move(float offset, float duration)
         {
