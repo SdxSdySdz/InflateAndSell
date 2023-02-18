@@ -16,7 +16,6 @@ namespace CodeBase.GameLogic
         [SerializeField] private Transform _rightHandle;
         
         private Capacity _capacity;
-        private Coroutine _fillingCoroutine;
 
         public Vector3 LeftHandlePosition => _leftHandle.position;
         public Vector3 RightHandlePosition => _rightHandle.position;
@@ -29,13 +28,10 @@ namespace CodeBase.GameLogic
             _model.localScale = _startScale;
         }
 
-        public void Fill(float volume, float pushDuration, Action onStartFilling = null, Action onEndFilling = null)
+        public IEnumerator Fill(float volume, float pushDuration, Action onStartFilling = null, Action onEndFilling = null)
         {
-            if (_fillingCoroutine != null)
-                StopCoroutine(_fillingCoroutine);
-            
             _capacity.Fill(volume);
-            _fillingCoroutine = StartCoroutine(
+            yield return StartCoroutine(
                 Inflate(
                         _capacity.FillingRatio,
                         pushDuration, 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.Upgrading
@@ -9,6 +10,7 @@ namespace CodeBase.GameLogic.Upgrading
         [SerializeField] private Lever _lever;
 
         private Barrel _barrel;
+        private Coroutine _pumpingCoroutine;
 
         public void Connect(Barrel barrel)
         {
@@ -23,7 +25,19 @@ namespace CodeBase.GameLogic.Upgrading
 
         public void PumpUp(Action onStart, Action onFinish)
         {
-            _barrel.Fill(_hose.PassingVolume, _lever.PushDuration, onStart, onFinish);
+            if (_pumpingCoroutine != null)
+                StopCoroutine(_pumpingCoroutine);
+
+            _pumpingCoroutine = StartCoroutine(ProvidePumpingUp(onStart, onFinish));
+        }
+        
+        public IEnumerator ProvidePumpingUp(Action onStart, Action onFinish)
+        {
+            onStart?.Invoke();
+            yield return _lever.PullUp();
+
+            StartCoroutine(_lever.PullDown());
+            yield return _barrel.Fill(_hose.PassingVolume, _lever.PushDuration, onEndFilling: onFinish);
         }
     }
 }
