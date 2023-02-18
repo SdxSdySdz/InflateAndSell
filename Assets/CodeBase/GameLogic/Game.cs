@@ -1,5 +1,6 @@
 ﻿using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.States.Core;
 
 namespace CodeBase.GameLogic
@@ -12,5 +13,10 @@ namespace CodeBase.GameLogic
         }
 
         public StateMachine StateMachine { get; }
+
+        public void Save()
+        {
+            AllServices.Container.Get<ISaveLoadService>().SaveProgress();
+        }
     }
 }

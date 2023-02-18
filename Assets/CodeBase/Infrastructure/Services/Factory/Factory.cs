@@ -31,7 +31,7 @@ namespace CodeBase.Infrastructure.Services.Factory
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
             Barrel barrel = InstantiateRegistered(prefab).GetComponent<Barrel>();
-            barrel.Construct(new Capacity(5));
+            barrel.Construct(new Capacity(3));
             
             barrel.transform.position = position;
 

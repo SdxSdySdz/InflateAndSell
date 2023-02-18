@@ -6,7 +6,7 @@ namespace CodeBase.GameLogic.Upgrading
     {
         public float PassingVolume => CurrentValue;
 
-        protected override float BaseValue => 3f;
+        protected override float BaseValue => 1f;
         protected override float Multiplier => 1.11f;
 
         protected override int ReadLevel(PlayerProgress progress)

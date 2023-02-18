@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Agava.YandexGames;
 using CodeBase.GameLogic;
 using CodeBase.Infrastructure;
@@ -23,6 +24,11 @@ namespace CodeBase
 
             DontDestroyOnLoad(this);
             yield break;
+        }
+
+        private void OnApplicationQuit()
+        {
+            _game.Save();
         }
     }
 }
