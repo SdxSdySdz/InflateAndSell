@@ -1,44 +1,40 @@
-﻿using CodeBase.Data;
-using CodeBase.GameLogic.Upgrading;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using CodeBase.Data;
+using CodeBase.GameLogic.WorkSpacing;
+using CodeBase.GameLogic.WorkSpacing.Commanders;
+using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
-using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.Infrastructure.Services.Update;
 using UnityEngine;
 
 namespace CodeBase.GameLogic
 {
     public class Player : MonoBehaviour, IProgressReader, IProgressWriter
-    {
+    { 
         private Wallet _wallet;
-        private Pump _pump;
-        private IInputService _inputService;
-        private ISaveLoadService _saveLoadService;
+        private List<WorkSpace> _workSpaces;
+        private InputBasedCommander _commander;
 
         public Wallet Wallet => _wallet;
         
-        public void Construct(Wallet wallet, Pump pump, IInputService inputService)
+        public void Construct(
+            Wallet wallet, 
+            List<WorkSpace> workSpaces, 
+            IInputService inputService, 
+            IUpdateService updateService
+            )
         {
             _wallet = wallet;
-            _pump = pump;
-            _inputService = inputService;
-
-            EnableInput();
+            _workSpaces = workSpaces;
+            _commander = new InputBasedCommander(inputService);
+            
+            _workSpaces[0].Accept(_commander);
+            
+            updateService.Register(_commander);
         }
 
-        private void Update()
-        {
-            if (_inputService == null)
-                return;
-
-            if (_inputService.IsClicked(out ClickTarget clickTarget) && clickTarget != ClickTarget.UI)
-                _pump.PumpUp(onStart: DisableInput, onFinish: EnableInput);
-        }
-
-        public void Take(Barrel barrel)
-        {
-            _pump.Connect(barrel);
-        }
-        
         public void LoadProgress(PlayerProgress progress)
         {
             _wallet.Construct(progress.Wallet.Amount);
@@ -49,14 +45,9 @@ namespace CodeBase.GameLogic
             progress.Wallet.Amount = _wallet.Amount;
         }
 
-        private void EnableInput()
+        public void Take(Barrel barrel)
         {
-            _inputService.Enable();
-        }
-
-        private void DisableInput()
-        {
-            _inputService.Disable();
+            _workSpaces[0].Place(barrel);
         }
     }
 }

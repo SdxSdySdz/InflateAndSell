@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CodeBase.Constants;
 using CodeBase.GameLogic;
-using CodeBase.GameLogic.Upgrading;
+using CodeBase.GameLogic.SpawnPoints;
+using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
@@ -51,14 +53,26 @@ namespace CodeBase.Infrastructure.States
 
         private async Task InitWorld()
         {
-            await InitPlayer();
+            List<WorkSpace> workSpaces = await CreateWorkspaces();
+            await InitPlayer(workSpaces);
         }
 
-        private async Task InitPlayer()
+        private async Task<List<WorkSpace>> CreateWorkspaces()
+        {
+            WorkSpaceSpawn spawn = Object.FindObjectOfType<WorkSpaceSpawn>();
+            
+            List<WorkSpace> workSpaces = new List<WorkSpace>()
+            {
+                await _factoryService.CreateWorkPlace(spawn.transform.position, 180),
+            };
+
+            return workSpaces;
+        }
+
+        private async Task InitPlayer(List<WorkSpace> workSpaces)
         {
             Wallet wallet = Object.FindObjectOfType<Wallet>();
-            Pump pump = Object.FindObjectOfType<Pump>();
-            await _factoryService.CreatePlayer(wallet, pump, _inputService);
+            await _factoryService.CreatePlayer(wallet, workSpaces, _inputService);
         }
 
         private void InformProgressReaders()

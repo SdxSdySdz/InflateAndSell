@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using CodeBase.Constants;
 using CodeBase.GameLogic;
-using CodeBase.GameLogic.Upgrading;
+using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.Update;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.Factory
@@ -13,10 +14,12 @@ namespace CodeBase.Infrastructure.Services.Factory
     public class Factory : IFactoryService
     {
         private readonly IAssetsService _assets;
+        private readonly IUpdateService _updateService;
 
-        public Factory(IAssetsService assets)
+        public Factory(IAssetsService assets, IUpdateService updateService)
         {
             _assets = assets;
+            _updateService = updateService;
         }
 
         public List<IProgressReader> ProgressReaders { get; } = new();
@@ -38,14 +41,25 @@ namespace CodeBase.Infrastructure.Services.Factory
             return barrel;
         }
 
-        public async Task<Player> CreatePlayer(Wallet wallet, Pump pump, IInputService inputService)
+        public async Task<Player> CreatePlayer(Wallet wallet, List<WorkSpace> workSpaces, IInputService inputService)
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Player);
             
             Player player = InstantiateRegistered(prefab).GetComponent<Player>();
-            player.Construct(wallet, pump, inputService);
+            player.Construct(wallet, workSpaces, inputService, _updateService);
             
             return player;
+        }
+
+        public async Task<WorkSpace> CreateWorkPlace(Vector3 position, float yRotation)
+        {
+            GameObject prefab = await _assets.Load<GameObject>(AssetAddress.WorkSpace);
+            
+            WorkSpace workSpace = InstantiateRegistered(prefab).GetComponent<WorkSpace>();
+            workSpace.transform.position = position;
+            workSpace.transform.Rotate(0, yRotation, 0);
+            
+            return workSpace;
         }
 
         private void Register(IProgressInteractor progressInteractor)

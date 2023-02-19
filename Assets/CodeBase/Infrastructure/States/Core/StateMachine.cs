@@ -5,6 +5,7 @@ using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.Infrastructure.Services.Update;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.States.Core
@@ -15,11 +16,11 @@ namespace CodeBase.Infrastructure.States.Core
 
         private IState _currentState;
 
-        public StateMachine(AllServices services, SceneLoader sceneLoader)
+        public StateMachine(AllServices services, SceneLoader sceneLoader, IUpdateService updateService)
         {
             _states = new Dictionary<Type, IState>()
             {
-                { typeof(BootstrapState), new BootstrapState(this, sceneLoader, services) },
+                { typeof(BootstrapState), new BootstrapState(this, sceneLoader, services, updateService) },
                 { typeof(LoadProgressState), new LoadProgressState(
                     this, 
                     services.Get<IProgressService>(),

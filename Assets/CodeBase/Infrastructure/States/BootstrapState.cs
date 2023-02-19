@@ -6,6 +6,7 @@ using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.Services.SDK;
+using CodeBase.Infrastructure.Services.Update;
 using CodeBase.Infrastructure.States.Core;
 
 namespace CodeBase.Infrastructure.States
@@ -15,16 +16,15 @@ namespace CodeBase.Infrastructure.States
         private readonly SceneLoader _sceneLoader;
         private readonly AllServices _services;
 
-        public BootstrapState(
-            StateMachine stateMachine, 
-            SceneLoader sceneLoader, 
-            AllServices services
-            ) : base(stateMachine)
+        public BootstrapState(StateMachine stateMachine,
+            SceneLoader sceneLoader,
+            AllServices services, 
+            IUpdateService updateService) : base(stateMachine)
         {
             _sceneLoader = sceneLoader;
             _services = services;
 
-            RegisterServices();
+            RegisterServices(updateService);
         }
 
         public void Enter()
@@ -36,17 +36,22 @@ namespace CodeBase.Infrastructure.States
         {
         }
 
-        private void RegisterServices()
+        private void RegisterServices(IUpdateService updateService)
         {
             _services.Register<IYandexGamesService>(new YandexGamesService());
+
+            _services.Register<IUpdateService>(updateService);
+            
+            _services.Register<IAssetsService>(new AssetsService());
+
+            _services.Register<IFactoryService>(new Factory(
+                _services.Get<IAssetsService>(),
+                _services.Get<IUpdateService>()
+                ));
             
             _services.Register<IInputService>(new StandaloneInputService());
             
-            _services.Register<IAssetsService>(new AssetsService());
-            
             _services.Register<IProgressService>(new ProgressService());
-
-            _services.Register<IFactoryService>(new Factory(_services.Get<IAssetsService>()));
 
             _services.Register<ISaveLoadService>(new SaveLoadService(
                 _services.Get<IProgressService>(),

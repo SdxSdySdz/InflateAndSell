@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.GameLogic;
-using CodeBase.GameLogic.Upgrading;
+using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
 using UnityEngine;
@@ -17,6 +17,7 @@ namespace CodeBase.Infrastructure.Services.Factory
         Task WarmUp();
         
         Task<Barrel> CreateBarrel(Vector3 position);
-        Task<Player> CreatePlayer(Wallet wallet, Pump pump, IInputService inputService);
+        Task<Player> CreatePlayer(Wallet wallet, List<WorkSpace> workSpaces, IInputService inputService);
+        Task<WorkSpace> CreateWorkPlace(Vector3 position, float yRotation);
     }
 }

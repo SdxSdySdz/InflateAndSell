@@ -30,7 +30,7 @@ namespace CodeBase.GameLogic
         private void OnValidate()
         {
             _end = Mathf.Max(_start, _end);
-
+            
             UpdateClip();
         }
 
@@ -41,6 +41,9 @@ namespace CodeBase.GameLogic
 
         private void UpdateClip()
         {
+            if (_source == null)
+                return;
+            
             _source.clip = _clip.SubClip01(_start, _end);
         }
     }
