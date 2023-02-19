@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CodeBase.Data;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
@@ -12,7 +13,7 @@ namespace CodeBase.GameLogic.Player
     public class Player : MonoBehaviour, IProgressReader, IProgressWriter
     { 
         private Wallet _wallet;
-        private LinkedList<WorkSpace> _workSpaces;
+        private WorkSpacesGallery _workSpaces;
         private InputBasedCommander _commander;
 
         public Wallet Wallet => _wallet;
@@ -25,10 +26,10 @@ namespace CodeBase.GameLogic.Player
             )
         {
             _wallet = wallet;
-            _workSpaces = new LinkedList<WorkSpace>(workSpaces);
+            _workSpaces = new WorkSpacesGallery(workSpaces);
             _commander = new InputBasedCommander(inputService);
             
-            _workSpaces.First.Value.Accept(_commander);
+            _workSpaces.First().Accept(_commander);
             
             updateService.Register(_commander);
         }
@@ -45,7 +46,7 @@ namespace CodeBase.GameLogic.Player
 
         public void Take(Barrel barrel)
         {
-            _workSpaces.First.Value.Place(barrel);
+            _workSpaces.First().Place(barrel);
         }
     }
 }
