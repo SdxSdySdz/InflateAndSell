@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace CodeBase.GameLogic
+namespace CodeBase.GameLogic.Player
 {
     public class Wallet : MonoBehaviour
     {

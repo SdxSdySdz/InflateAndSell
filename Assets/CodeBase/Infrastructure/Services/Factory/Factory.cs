@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.Constants;
-using CodeBase.GameLogic;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Input;
@@ -41,7 +41,7 @@ namespace CodeBase.Infrastructure.Services.Factory
             return barrel;
         }
 
-        public async Task<Player> CreatePlayer(Wallet wallet, List<WorkSpace> workSpaces, IInputService inputService)
+        public async Task<Player> CreatePlayer(Wallet wallet, IEnumerable<WorkSpace> workSpaces, IInputService inputService)
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Player);
             

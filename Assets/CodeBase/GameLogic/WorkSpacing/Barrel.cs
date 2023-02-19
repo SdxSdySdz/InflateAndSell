@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace CodeBase.GameLogic
+namespace CodeBase.GameLogic.WorkSpacing
 {
     public class Barrel : MonoBehaviour
     {

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeBase.GameLogic.WorkSpacing;
 using UnityEngine;
 
-namespace CodeBase.GameLogic
+namespace CodeBase.GameLogic.Marketing
 {
     public class Hands : MonoBehaviour
     {

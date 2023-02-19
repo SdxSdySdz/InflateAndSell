@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBase.GameLogic
+namespace CodeBase.GameLogic.WorkSpacing
 {
     public class Capacity
     {

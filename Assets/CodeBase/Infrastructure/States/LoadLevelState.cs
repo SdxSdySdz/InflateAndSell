@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CodeBase.Constants;
 using CodeBase.GameLogic;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.SpawnPoints;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Factory;

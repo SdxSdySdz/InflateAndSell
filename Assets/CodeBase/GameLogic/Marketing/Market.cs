@@ -1,4 +1,6 @@
-﻿namespace CodeBase.GameLogic
+﻿using CodeBase.GameLogic.WorkSpacing;
+
+namespace CodeBase.GameLogic.Marketing
 {
     public class Market
     {

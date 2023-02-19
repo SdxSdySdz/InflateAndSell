@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using CodeBase.GameLogic.WorkSpacing;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.Upgrading

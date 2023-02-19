@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CodeBase.GameLogic
+namespace CodeBase.GameLogic.Marketing
 {
     public class MoneyEffect : MonoBehaviour
     {
