@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.Constants;
-using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Input;
@@ -15,11 +14,13 @@ namespace CodeBase.Infrastructure.Services.Factory
     {
         private readonly IAssetsService _assets;
         private readonly IUpdateService _updateService;
+        private readonly IInputService _inputService;
 
-        public Factory(IAssetsService assets, IUpdateService updateService)
+        public Factory(IAssetsService assets, IUpdateService updateService, IInputService inputService)
         {
             _assets = assets;
             _updateService = updateService;
+            _inputService = inputService;
         }
 
         public List<IProgressReader> ProgressReaders { get; } = new();
@@ -28,9 +29,10 @@ namespace CodeBase.Infrastructure.Services.Factory
         public async Task WarmUp()
         {
             await _assets.Load<GameObject>(AssetAddress.Barrel);
+            await _assets.Load<GameObject>(AssetAddress.WorkSpace);
         }
 
-        public async Task<Barrel> CreateBarrel(Vector3 position)
+        public async Task<Barrel> CreateBarrel(Vector3 position = new Vector3())
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
             Barrel barrel = InstantiateRegistered(prefab).GetComponent<Barrel>();
@@ -41,21 +43,13 @@ namespace CodeBase.Infrastructure.Services.Factory
             return barrel;
         }
 
-        public async Task<Player> CreatePlayer(Wallet wallet, IEnumerable<WorkSpace> workSpaces, IInputService inputService)
-        {
-            GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Player);
-            
-            Player player = InstantiateRegistered(prefab).GetComponent<Player>();
-            player.Construct(wallet, workSpaces, inputService, _updateService);
-            
-            return player;
-        }
-
         public async Task<WorkSpace> CreateWorkPlace(Vector3 position, float yRotation)
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.WorkSpace);
             
             WorkSpace workSpace = InstantiateRegistered(prefab).GetComponent<WorkSpace>();
+            workSpace.Construct(this, _inputService);
+            
             workSpace.transform.position = position;
             workSpace.transform.Rotate(0, yRotation, 0);
             

@@ -9,8 +9,10 @@ namespace CodeBase.GameLogic.WorkSpacing.Commanders
         
         private WorkSpace _workSpace;
         
-        public InputBasedCommander(IInputService inputService)
+        public InputBasedCommander(IUpdateService updateService, IInputService inputService)
         {
+            updateService.Register(this);
+            
             _inputService = inputService;
             EnableInput();
         }

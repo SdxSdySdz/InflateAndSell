@@ -1,4 +1,6 @@
-﻿namespace CodeBase.Infrastructure.Services
+﻿using System;
+
+namespace CodeBase.Infrastructure.Services
 {
     public class AllServices
     {
@@ -15,7 +17,11 @@
         public TService Get<TService>() 
             where TService : IService
         {
-            return ServiceImplementation<TService>.Service;
+            var service = ServiceImplementation<TService>.Service;
+            if (service == null)
+                throw new NullReferenceException($"Not registered service: {service}");
+            
+            return service;
         }
 
         private class ServiceImplementation<TService>

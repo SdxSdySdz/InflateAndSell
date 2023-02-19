@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using CodeBase.Constants;
-using CodeBase.GameLogic;
-using CodeBase.GameLogic.Player;
-using CodeBase.GameLogic.SpawnPoints;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.Update;
 using CodeBase.Infrastructure.States.Core;
-using UnityEngine;
+using CodeBase.UI;
+using CodeBase.UI.Transition;
+using Object = UnityEngine.Object;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -18,19 +18,27 @@ namespace CodeBase.Infrastructure.States
         private readonly SceneLoader _sceneLoader;
         private readonly IFactoryService _factoryService;
         private readonly IProgressService _progressService;
+        private readonly IUpdateService _updateService;
         private readonly IInputService _inputService;
+
+        private Company _company;
+        private BuyWorkPlaceWindow _buyWorkPlaceWindow;
+
+        // private Player _player;
 
         public LoadLevelState(
             StateMachine stateMachine,
             SceneLoader sceneLoader,
             IFactoryService factoryService,
             IProgressService progressService,
+            IUpdateService updateService,
             IInputService inputService
         ) : base(stateMachine)
         {
             _sceneLoader = sceneLoader;
             _factoryService = factoryService;
             _progressService = progressService;
+            _updateService = updateService;
             _inputService = inputService;
         }
 
@@ -48,32 +56,28 @@ namespace CodeBase.Infrastructure.States
         private async void EnterGameLoop()
         {
             await InitWorld();
+            InitUI();
             InformProgressReaders();
             StateMachine.Enter<GameLoopState>();
         }
 
         private async Task InitWorld()
         {
-            List<WorkSpace> workSpaces = await CreateWorkspaces();
-            await InitPlayer(workSpaces);
+            _company = Object.FindObjectOfType<Company>();
+            await _company.Construct(_factoryService, _updateService, _inputService);
         }
 
-        private async Task<List<WorkSpace>> CreateWorkspaces()
+        private void InitUI()
         {
-            WorkSpaceSpawn spawn = Object.FindObjectOfType<WorkSpaceSpawn>();
+            _buyWorkPlaceWindow = Object.FindObjectOfType<BuyWorkPlaceWindow>();
+
+            RightTransitionButton rightTransitionButton = Object.FindObjectOfType<RightTransitionButton>();
+            LeftTransitionButton leftTransitionButton = Object.FindObjectOfType<LeftTransitionButton>();
+
+            _buyWorkPlaceWindow.BuyButtonClicked += OnBuyButtonClicked;
             
-            List<WorkSpace> workSpaces = new List<WorkSpace>()
-            {
-                await _factoryService.CreateWorkPlace(spawn.transform.position, 180),
-            };
-
-            return workSpaces;
-        }
-
-        private async Task InitPlayer(List<WorkSpace> workSpaces)
-        {
-            Wallet wallet = Object.FindObjectOfType<Wallet>();
-            await _factoryService.CreatePlayer(wallet, workSpaces, _inputService);
+            rightTransitionButton.Clicked += TryToNextWorkSpace;
+            leftTransitionButton.Clicked += TryToPreviousWorkSpace;
         }
 
         private void InformProgressReaders()
@@ -82,6 +86,41 @@ namespace CodeBase.Infrastructure.States
             {
                 progressReader.LoadProgress(_progressService.Progress);
             }
+        }
+
+        private void OnBuyButtonClicked()
+        {
+            _buyWorkPlaceWindow.Hide();
+            
+            if (_company.IsCurrentWorkSpaceLast)
+                _company.ToNextWorkSpace();
+            else if (_company.IsCurrentWorkSpaceFirst)
+                _company.ToPreviousWorkSpace();
+            else
+                throw new InvalidOperationException("Trying to buy WorkSpace, " +
+                                                    "not being on the edges of company");
+        }
+        
+        private void TryToNextWorkSpace()
+        {
+            if (_company.IsCurrentWorkSpaceLast)
+            {
+                _buyWorkPlaceWindow.Show();
+                return;
+            }
+            
+            _company.ToNextWorkSpace();
+        }
+        
+        private void TryToPreviousWorkSpace()
+        {
+            if (_company.IsCurrentWorkSpaceFirst)
+            {
+                _buyWorkPlaceWindow.Show();
+                return;
+            }
+            
+            _company.ToPreviousWorkSpace();
         }
     }
 }

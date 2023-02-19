@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿/*using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
@@ -26,7 +25,7 @@ namespace CodeBase.GameLogic.Player
             )
         {
             _wallet = wallet;
-            _workSpaces = new WorkSpacesGallery(workSpaces);
+            _workSpaces.Construct(workSpaces, inputService);
             _commander = new InputBasedCommander(inputService);
             
             _workSpaces.First().Accept(_commander);
@@ -48,5 +47,10 @@ namespace CodeBase.GameLogic.Player
         {
             _workSpaces.First().Place(barrel);
         }
+
+        public void ToNextWorkSpace()
+        {
+            _workSpaces.ToNextWorkSpace();
+        }
     }
-}
+}*/

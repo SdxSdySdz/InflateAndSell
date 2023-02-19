@@ -39,6 +39,8 @@ namespace CodeBase.Infrastructure.States
         private void RegisterServices(IUpdateService updateService)
         {
             _services.Register<IYandexGamesService>(new YandexGamesService());
+            
+            _services.Register<IInputService>(new StandaloneInputService());
 
             _services.Register<IUpdateService>(updateService);
             
@@ -46,10 +48,9 @@ namespace CodeBase.Infrastructure.States
 
             _services.Register<IFactoryService>(new Factory(
                 _services.Get<IAssetsService>(),
-                _services.Get<IUpdateService>()
+                _services.Get<IUpdateService>(),
+                _services.Get<IInputService>()
                 ));
-            
-            _services.Register<IInputService>(new StandaloneInputService());
             
             _services.Register<IProgressService>(new ProgressService());
 

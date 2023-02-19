@@ -31,12 +31,11 @@ namespace CodeBase.Infrastructure.States.Core
                     sceneLoader, 
                     services.Get<IFactoryService>(),
                     services.Get<IProgressService>(),
+                    services.Get<IUpdateService>(),
                     services.Get<IInputService>()
                     ) },
                 { typeof(GameLoopState), new GameLoopState(
-                    this, 
-                    services.Get<IFactoryService>(),
-                    services.Get<IInputService>()
+                    this
                     ) },
             };
         }
