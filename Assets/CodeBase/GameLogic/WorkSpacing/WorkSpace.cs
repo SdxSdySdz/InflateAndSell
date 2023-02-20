@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CodeBase.GameLogic.Marketing;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.Upgrading;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Factory;
@@ -14,14 +15,17 @@ namespace CodeBase.GameLogic.WorkSpacing
         [SerializeField] private Pump _pump;
         [SerializeField] private Hands _hands;
         [SerializeField] private Transform _barrelSpawn;
-        
-        private IFactoryService _factoryService;
+
+        private Wallet _wallet;
+        private Market _market;
         private Barrel _barrel;
-        
+        private IFactoryService _factoryService;
         private IPumpingCommander _commander;
 
-        public void Construct(IPumpingCommander commander, IFactoryService factoryService)
+        public void Construct(Wallet wallet, IPumpingCommander commander, IFactoryService factoryService)
         {
+            _wallet = wallet;
+            _market = new Market();
             _commander = commander;
             _factoryService = factoryService;
             
@@ -77,7 +81,7 @@ namespace CodeBase.GameLogic.WorkSpacing
 
         private void SellCurrentBarrel()
         {
-            // _player.Wallet.Add(_market.Sell(_barrel));
+            _wallet.Add(_market.Sell(_barrel));
         }
     }
 }

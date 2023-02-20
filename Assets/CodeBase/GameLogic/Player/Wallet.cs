@@ -1,32 +1,32 @@
 ﻿using System;
-using TMPro;
-using UnityEngine;
+using CodeBase.Data;
+using CodeBase.Infrastructure.Services.Progress;
 
 namespace CodeBase.GameLogic.Player
 {
-    public class Wallet : MonoBehaviour
+    public class Wallet : IProgressReader, IProgressWriter
     {
-        [SerializeField] private TMP_Text _text;
-        
         private int _amount;
         
-        public int Amount
-        {
-            get => _amount;
-            
-            private set
-            {
-                _amount = value;
-                UpdateView();
-            }
-        }
-
-        public void Construct(int amount)
+        public Wallet(int amount = 0)
         {
             if (amount < 0)
                 throw new ArgumentOutOfRangeException(nameof(amount));
             
             Amount = amount;
+        }
+
+        public event Action<int> Changed;
+
+        private int Amount
+        {
+            get => _amount;
+            
+            set
+            {
+                _amount = value;
+                Changed?.Invoke(_amount);
+            }
         }
 
         public void Add(int amount)
@@ -37,9 +37,14 @@ namespace CodeBase.GameLogic.Player
             Amount += amount;
         }
 
-        private void UpdateView()
+        public void LoadProgress(PlayerProgress progress)
         {
-            _text.text = $"{_amount} $";
+            Amount = progress.Wallet.Amount;
+        }
+
+        public void UpdateProgress(PlayerProgress progress)
+        {
+            progress.Wallet.Amount = Amount;
         }
     }
 }

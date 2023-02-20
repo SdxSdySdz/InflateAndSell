@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
@@ -12,6 +13,7 @@ namespace CodeBase.GameLogic.WorkSpacing
     [RequireComponent(typeof(RowPlacer))]
     public class Company : MonoBehaviour
     {
+        private Wallet _wallet;
         private RowPlacer _placer;
         private IFactoryService _factoryService;
         private IUpdateService _updateService;
@@ -29,11 +31,13 @@ namespace CodeBase.GameLogic.WorkSpacing
         }
 
         public async Task Construct(
+            Wallet wallet,
             IFactoryService factoryService, 
             IUpdateService updateService, 
             IInputService inputService
             )
         {
+            _wallet = wallet;
             _factoryService = factoryService;
             _updateService = updateService;
 
@@ -74,6 +78,7 @@ namespace CodeBase.GameLogic.WorkSpacing
             if (isBoundary)
             {
                 WorkSpace workSpace = await _factoryService.CreateWorkPlace(
+                    _wallet,
                     new EmployeeCommander(2f, _updateService), 
                     Vector3.zero, 
                     180);
@@ -93,6 +98,7 @@ namespace CodeBase.GameLogic.WorkSpacing
             List<WorkSpace> workSpaces = new List<WorkSpace>()
             {
                 await _factoryService.CreateWorkPlace(
+                    _wallet,
                     new InputBasedCommander(_updateService, inputService), 
                     transform.position, 
                     180
