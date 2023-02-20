@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CodeBase.Constants;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
@@ -64,7 +65,13 @@ namespace CodeBase.Infrastructure.States
         private async Task InitWorld()
         {
             _company = Object.FindObjectOfType<Company>();
-            await _company.Construct(_factoryService, _updateService, _inputService);
+            
+            Wallet wallet = _factoryService.CreateWallet();
+            
+            WalletPresenter walletPresenter = Object.FindObjectOfType<WalletPresenter>();
+            walletPresenter.Construct(wallet);
+            
+            await _company.Construct(wallet, _factoryService, _updateService, _inputService);
         }
 
         private void InitUI()

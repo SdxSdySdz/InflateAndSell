@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.Constants;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Assets;
@@ -27,6 +28,14 @@ namespace CodeBase.Infrastructure.Services.Factory
             await _assets.Load<GameObject>(AssetAddress.WorkSpace);
         }
 
+        public Wallet CreateWallet()
+        {
+            Wallet wallet = new Wallet();
+            Register(wallet);
+
+            return wallet;
+        }
+
         public async Task<Barrel> CreateBarrel(Vector3 position = new Vector3())
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.Barrel);
@@ -39,6 +48,7 @@ namespace CodeBase.Infrastructure.Services.Factory
         }
 
         public async Task<WorkSpace> CreateWorkPlace(
+            Wallet wallet,
             IPumpingCommander commander, 
             Vector3 position,
             float yRotation)
@@ -46,7 +56,7 @@ namespace CodeBase.Infrastructure.Services.Factory
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.WorkSpace);
             
             WorkSpace workSpace = InstantiateRegistered(prefab).GetComponent<WorkSpace>();
-            workSpace.Construct(commander, this);
+            workSpace.Construct(wallet, commander, this);
             
             workSpace.transform.position = position;
             workSpace.transform.Rotate(0, yRotation, 0);
