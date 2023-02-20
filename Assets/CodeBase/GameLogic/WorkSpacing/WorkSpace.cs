@@ -68,7 +68,10 @@ namespace CodeBase.GameLogic.WorkSpacing
 
         private void PickUpBarrel()
         {
-            _hands.PickUp(_barrel, onStart: DisableInput, onFinish: OnBarrelPickedUp);
+            if (_commander is InputBasedCommander)
+                _hands.PickUp(_barrel, onStart: DisableInput, onFinish: OnBarrelPickedUp);
+            else
+                _hands.PickUp(_barrel, onFinish: OnBarrelPickedUp);
         }
 
         private void DisableInput()
@@ -80,7 +83,9 @@ namespace CodeBase.GameLogic.WorkSpacing
         {
             SellCurrentBarrel();
             await PrepareNewBarrel();
-            _inputService.Enable();
+            
+            if (_commander is InputBasedCommander)
+                _inputService.Enable();
         }
 
         private void SellCurrentBarrel()

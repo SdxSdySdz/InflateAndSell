@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Factory;
@@ -13,6 +14,7 @@ namespace CodeBase.GameLogic.WorkSpacing
     {
         private RowPlacer _placer;
         private IFactoryService _factoryService;
+        private IUpdateService _updateService;
         private int _currentIndex;
 
         private Vector3 _currentWorkSpaceOrigin;
@@ -33,6 +35,7 @@ namespace CodeBase.GameLogic.WorkSpacing
             )
         {
             _factoryService = factoryService;
+            _updateService = updateService;
 
             List<WorkSpace> workSpaces = await CreateWorkspaces();
             foreach (var workSpace in workSpaces)
@@ -52,28 +55,34 @@ namespace CodeBase.GameLogic.WorkSpacing
 
         public async void ToNextWorkSpace()
         {
-            if (IsCurrentWorkSpaceLast)
-            {
-                WorkSpace workSpace = await _factoryService.CreateWorkPlace(Vector3.zero, 180);
-                _placer.AddLast(workSpace.transform);
-            }
-            
-            _currentIndex++;
-    
-            _placer.Focus(_currentIndex, _currentWorkSpaceOrigin);
+            await ToOtherWorkSpace(
+                isBoundary: IsCurrentWorkSpaceLast, 
+                isIndexOffsetNeeded: false, 
+                add: ((workSpace) => _placer.AddLast(workSpace.transform)));
         }
         
         public async void ToPreviousWorkSpace()
         {
-            if (IsCurrentWorkSpaceFirst)
+            await ToOtherWorkSpace(
+                isBoundary: IsCurrentWorkSpaceFirst, 
+                isIndexOffsetNeeded: true, 
+                add: ((workSpace) => _placer.AddFirst(workSpace.transform)));
+        }
+        
+        private async Task ToOtherWorkSpace(bool isBoundary, bool isIndexOffsetNeeded, Action<WorkSpace> add)
+        {
+            int indexOffset = isIndexOffsetNeeded ? 1 : 0;
+            if (isBoundary)
             {
                 WorkSpace workSpace = await _factoryService.CreateWorkPlace(Vector3.zero, 180);
-                _placer.AddFirst(workSpace.transform);
+                workSpace.Accept(new EmployeeCommander(2f, _updateService));
+                await workSpace.StartWork();
+                add.Invoke(workSpace);
             }
-            else
-            {
-                _currentIndex--;
-            }
+            else 
+                _currentIndex -= indexOffset;
+            
+            _currentIndex += 1 - indexOffset;
     
             _placer.Focus(_currentIndex, _currentWorkSpaceOrigin);
         }

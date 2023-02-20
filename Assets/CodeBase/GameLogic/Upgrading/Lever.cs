@@ -38,30 +38,28 @@ namespace CodeBase.GameLogic.Upgrading
             progress.Lever.Level = level;
         }
 
-       
-
         private IEnumerator Move(float offset, float duration)
         {
-            Vector3 endPosition = _model.transform.position + Vector3.up * offset;
+            Vector3 endPosition = _model.transform.localPosition + Vector3.up * offset;
             
-            yield return StartCoroutine(Move(endPosition, PushDuration));
+            yield return StartCoroutine(Move(endPosition, duration));
         }
         
         private IEnumerator Move(Vector3 endPosition, float duration)
         {
             var waitForEndOfFrame = new WaitForEndOfFrame();
-            Vector3 startPosition = _model.transform.position;
+            Vector3 startPosition = _model.transform.localPosition;
             float time = 0;
         
             while (time < duration)
             {
-                _model.transform.position = Vector3.Lerp(startPosition, endPosition, time / duration);
+                _model.transform.localPosition = Vector3.Lerp(startPosition, endPosition, time / duration);
                 
                 time += Time.deltaTime;
                 yield return waitForEndOfFrame;
             }
             
-            _model.transform.position = endPosition;
+            _model.transform.localPosition = endPosition;
         }
     }
 }

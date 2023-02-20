@@ -17,8 +17,8 @@ namespace CodeBase.GameLogic.WorkSpacing
         
         private Capacity _capacity;
 
-        public Vector3 LeftHandlePosition => _leftHandle.position;
-        public Vector3 RightHandlePosition => _rightHandle.position;
+        public Transform LeftHandlePosition => _leftHandle;
+        public Transform RightHandlePosition => _rightHandle;
         
         public event UnityAction Overflowed;
         

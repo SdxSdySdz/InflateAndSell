@@ -12,6 +12,9 @@ namespace CodeBase.GameLogic.Marketing
         [SerializeField] private Transform _leftHand;
         [SerializeField] private Transform _rightHand;
         [SerializeField] private MoneyEffect _moneyEffect;
+
+        [SerializeField] private Transform _leftHandOrigin;
+        [SerializeField] private Transform _rightHandOrigin;
         
         private Coroutine _pickingCoroutine;
 
@@ -36,8 +39,22 @@ namespace CodeBase.GameLogic.Marketing
 
             List<IEnumerator> pickings = new()
             {
-                PickUpWithHand(_leftHand, barrel.LeftHandlePosition, _pickingDuration),
-                PickUpWithHand(_rightHand, barrel.RightHandlePosition, _pickingDuration, barrel),
+                PickUpWithHand(
+                    barrel, 
+                    _leftHand, 
+                    _leftHandOrigin,
+                    barrel.LeftHandlePosition, 
+                    _pickingDuration
+                    ),
+                
+                PickUpWithHand(
+                    barrel, 
+                    _rightHand, 
+                    _rightHandOrigin,
+                    barrel.RightHandlePosition, 
+                    _pickingDuration, 
+                    true
+                    ),
             };
             
             bool isNotFinished;
@@ -56,37 +73,55 @@ namespace CodeBase.GameLogic.Marketing
             onFinish?.Invoke();
         }
 
-        private IEnumerator PickUpWithHand(Transform hand, Vector3 handlePosition, float duration, Barrel barrel = null)
+        private IEnumerator PickUpWithHand(
+            Barrel barrel, 
+            Transform hand, 
+            Transform origin,
+            Transform handle,
+            float duration, 
+            bool isDragNeeded = false
+            )
         {
-            Vector3 startPosition = hand.position;
-            
-            foreach (var _ in Move(hand, startPosition, handlePosition, duration / 2f))
+            foreach (var _ in Move(hand, origin.position, handle, duration / 2f))
             {
                 yield return _;
             }
 
-            bool isDragNeeded = barrel != null;
             if (isDragNeeded)
                 barrel.transform.SetParent(hand);
             
-            foreach (var _ in Move(hand, handlePosition, startPosition, duration / 2f))
+            foreach (var _ in Move(hand, handle.position, origin, duration / 2f))
             {
                 yield return _;
             }
         }
 
-        private IEnumerable Move(Transform hand, Vector3 startPosition, Vector3 targetPosition, float duration)
+        private IEnumerable Move(Transform hand, Transform startPosition, Transform targetPosition, float duration)
         {
             float time = 0;
             while (time < duration)
             {
-                hand.position = Vector3.Lerp(startPosition, targetPosition, time / duration);
+                hand.position = Vector3.Lerp(startPosition.position, targetPosition.position, time / duration);
                 
                 time += Time.deltaTime;
                 yield return null;
             }
 
-            hand.position = targetPosition;
+            hand.position = targetPosition.position;
+        }
+        
+        private IEnumerable Move(Transform hand, Vector3 startPosition, Transform targetPosition, float duration)
+        {
+            float time = 0;
+            while (time < duration)
+            {
+                hand.position = Vector3.Lerp(startPosition, targetPosition.position, time / duration);
+                
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            hand.position = targetPosition.position;
         }
 
         private void ThrowMoney()
