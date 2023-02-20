@@ -59,6 +59,9 @@ namespace CodeBase.Infrastructure.States
             await InitWorld();
             InitUI();
             InformProgressReaders();
+            
+            await _company.CreateWorkSpaces();
+            
             StateMachine.Enter<GameLoopState>();
         }
 
@@ -71,7 +74,9 @@ namespace CodeBase.Infrastructure.States
             WalletPresenter walletPresenter = Object.FindObjectOfType<WalletPresenter>();
             walletPresenter.Construct(wallet);
             
-            await _company.Construct(wallet, _factoryService, _updateService, _inputService);
+            _company.Construct(wallet, _factoryService, _updateService, _inputService);
+            _factoryService.ProgressReaders.Add(_company);
+            _factoryService.ProgressWriters.Add(_company);
         }
 
         private void InitUI()

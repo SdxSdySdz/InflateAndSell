@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using CodeBase.Data;
 using CodeBase.GameLogic.Marketing;
 using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.Upgrading;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Factory;
-using CodeBase.Infrastructure.Services.Input;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.WorkSpacing
@@ -22,11 +21,11 @@ namespace CodeBase.GameLogic.WorkSpacing
         private IFactoryService _factoryService;
         private IPumpingCommander _commander;
 
-        public void Construct(Wallet wallet, IPumpingCommander commander, IFactoryService factoryService)
+        public void Construct(IPumpingCommander commander, Wallet wallet, IFactoryService factoryService)
         {
+            _commander = commander;
             _wallet = wallet;
             _market = new Market();
-            _commander = commander;
             _factoryService = factoryService;
             
             _commander.Settle(this);
@@ -41,6 +40,11 @@ namespace CodeBase.GameLogic.WorkSpacing
         public void PumpUp()
         {
             _pump.PumpUp(_commander.Disable, _commander.Enable);
+        }
+
+        public WorkSpaceProgress ToProgressData()
+        {
+            return new WorkSpaceProgress(_commander);
         }
 
         private async Task PrepareNewBarrel()

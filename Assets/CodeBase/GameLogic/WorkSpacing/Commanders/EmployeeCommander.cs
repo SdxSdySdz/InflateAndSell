@@ -8,10 +8,10 @@ namespace CodeBase.GameLogic.WorkSpacing.Commanders
 
         private bool _isEnabled;
         private float _time;
-        
-        public EmployeeCommander(float pumpingDelay, IUpdateService updateService) : base(updateService)
+
+        public EmployeeCommander(IUpdateService updateService) : base(updateService)
         {
-            _pumpingDelay = pumpingDelay;
+            _pumpingDelay = UnityEngine.Random.Range(0.5f, 3f);
             _time = 0;
         }
 

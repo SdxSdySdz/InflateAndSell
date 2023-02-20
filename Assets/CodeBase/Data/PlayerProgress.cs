@@ -8,12 +8,14 @@ namespace CodeBase.Data
         public HoseProgress Hose;
         public LeverProgress Lever;
         public WalletProgress Wallet;
+        public CompanyProgress Company;
 
         public PlayerProgress()
         {
             Hose = new HoseProgress();
             Lever = new LeverProgress();
             Wallet = new WalletProgress();
+            Company = new CompanyProgress();
         }
     }
 }

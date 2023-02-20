@@ -18,6 +18,6 @@ namespace CodeBase.Infrastructure.Services.Factory
 
         Wallet CreateWallet();
         Task<Barrel> CreateBarrel(Vector3 position = new Vector3());
-        Task<WorkSpace> CreateWorkPlace(Wallet wallet, IPumpingCommander commander, Vector3 position, float yRotation);
+        Task<WorkSpace> CreateWorkPlace(IPumpingCommander commander, Wallet wallet, Vector3 position, float yRotation);
     }
 }

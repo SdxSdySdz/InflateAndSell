@@ -48,15 +48,15 @@ namespace CodeBase.Infrastructure.Services.Factory
         }
 
         public async Task<WorkSpace> CreateWorkPlace(
+            IPumpingCommander commander,
             Wallet wallet,
-            IPumpingCommander commander, 
             Vector3 position,
             float yRotation)
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.WorkSpace);
             
             WorkSpace workSpace = InstantiateRegistered(prefab).GetComponent<WorkSpace>();
-            workSpace.Construct(wallet, commander, this);
+            workSpace.Construct(commander, wallet, this);
             
             workSpace.transform.position = position;
             workSpace.transform.Rotate(0, yRotation, 0);
