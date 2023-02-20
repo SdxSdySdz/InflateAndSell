@@ -17,6 +17,11 @@ namespace CodeBase.GameLogic.WorkSpacing.Commanders
             _workSpace = workSpace;
         }
 
+        public abstract void Enable();
+
+        public abstract void Disable();
+        
+
         public void Update(float deltaTime)
         {
             if (_workSpace == null)
@@ -24,12 +29,12 @@ namespace CodeBase.GameLogic.WorkSpacing.Commanders
 
             OnUpdate(deltaTime);
         }
-
-        protected void RequestPumping(Action onStart = null, Action onFinish = null)
-        {
-            _workSpace.PumpUp(onStart, onFinish);
-        }
-
+        
         protected abstract void OnUpdate(float deltaTime);
+        
+        protected void RequestPumping()
+        {
+            _workSpace.PumpUp();
+        }
     }
 }

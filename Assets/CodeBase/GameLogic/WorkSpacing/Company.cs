@@ -37,10 +37,9 @@ namespace CodeBase.GameLogic.WorkSpacing
             _factoryService = factoryService;
             _updateService = updateService;
 
-            List<WorkSpace> workSpaces = await CreateWorkspaces();
+            List<WorkSpace> workSpaces = await CreateWorkspaces(inputService);
             foreach (var workSpace in workSpaces)
             {
-                workSpace.Accept(new InputBasedCommander(updateService, inputService));
                 _placer.AddLast(workSpace.transform);
             }
         }
@@ -74,8 +73,10 @@ namespace CodeBase.GameLogic.WorkSpacing
             int indexOffset = isIndexOffsetNeeded ? 1 : 0;
             if (isBoundary)
             {
-                WorkSpace workSpace = await _factoryService.CreateWorkPlace(Vector3.zero, 180);
-                workSpace.Accept(new EmployeeCommander(2f, _updateService));
+                WorkSpace workSpace = await _factoryService.CreateWorkPlace(
+                    new EmployeeCommander(2f, _updateService), 
+                    Vector3.zero, 
+                    180);
                 await workSpace.StartWork();
                 add.Invoke(workSpace);
             }
@@ -87,11 +88,15 @@ namespace CodeBase.GameLogic.WorkSpacing
             _placer.Focus(_currentIndex, _currentWorkSpaceOrigin);
         }
 
-        private async Task<List<WorkSpace>> CreateWorkspaces()
+        private async Task<List<WorkSpace>> CreateWorkspaces(IInputService inputService)
         {
             List<WorkSpace> workSpaces = new List<WorkSpace>()
             {
-                await _factoryService.CreateWorkPlace(transform.position, 180),
+                await _factoryService.CreateWorkPlace(
+                    new InputBasedCommander(_updateService, inputService), 
+                    transform.position, 
+                    180
+                    ),
             };
 
             return workSpaces;

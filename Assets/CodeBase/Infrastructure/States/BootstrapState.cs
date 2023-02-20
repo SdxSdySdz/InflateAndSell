@@ -47,9 +47,7 @@ namespace CodeBase.Infrastructure.States
             _services.Register<IAssetsService>(new AssetsService());
 
             _services.Register<IFactoryService>(new Factory(
-                _services.Get<IAssetsService>(),
-                _services.Get<IUpdateService>(),
-                _services.Get<IInputService>()
+                _services.Get<IAssetsService>()
                 ));
             
             _services.Register<IProgressService>(new ProgressService());

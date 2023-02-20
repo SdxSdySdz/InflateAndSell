@@ -16,31 +16,27 @@ namespace CodeBase.GameLogic.WorkSpacing
         [SerializeField] private Transform _barrelSpawn;
         
         private IFactoryService _factoryService;
-        private IInputService _inputService;
         private Barrel _barrel;
         
         private IPumpingCommander _commander;
 
-        public void Construct(IFactoryService factoryService, IInputService inputService)
+        public void Construct(IPumpingCommander commander, IFactoryService factoryService)
         {
+            _commander = commander;
             _factoryService = factoryService;
-            _inputService = inputService;
+            
+            _commander.Settle(this);
         }
 
         public async Task StartWork()
         {
+            _commander.Enable();
             await PrepareNewBarrel();
         }
 
-        public void PumpUp(Action onStart = null, Action onFinish = null)
+        public void PumpUp()
         {
-            _pump.PumpUp(onStart, onFinish);
-        }
-
-        public void Accept(IPumpingCommander commander)
-        {
-            _commander = commander;
-            _commander.Settle(this);
+            _pump.PumpUp(_commander.Disable, _commander.Enable);
         }
 
         private async Task PrepareNewBarrel()
@@ -68,24 +64,15 @@ namespace CodeBase.GameLogic.WorkSpacing
 
         private void PickUpBarrel()
         {
-            if (_commander is InputBasedCommander)
-                _hands.PickUp(_barrel, onStart: DisableInput, onFinish: OnBarrelPickedUp);
-            else
-                _hands.PickUp(_barrel, onFinish: OnBarrelPickedUp);
-        }
-
-        private void DisableInput()
-        {
-            _inputService.Disable();
+            _hands.PickUp(_barrel, onStart: _commander.Disable, onFinish: OnBarrelPickedUp);
         }
 
         private async void OnBarrelPickedUp()
         {
             SellCurrentBarrel();
             await PrepareNewBarrel();
-            
-            if (_commander is InputBasedCommander)
-                _inputService.Enable();
+
+            _commander.Enable();
         }
 
         private void SellCurrentBarrel()

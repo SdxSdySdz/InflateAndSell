@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using CodeBase.Constants;
 using CodeBase.GameLogic.WorkSpacing;
+using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Assets;
-using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
-using CodeBase.Infrastructure.Services.Update;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.Factory
@@ -13,14 +12,10 @@ namespace CodeBase.Infrastructure.Services.Factory
     public class Factory : IFactoryService
     {
         private readonly IAssetsService _assets;
-        private readonly IUpdateService _updateService;
-        private readonly IInputService _inputService;
 
-        public Factory(IAssetsService assets, IUpdateService updateService, IInputService inputService)
+        public Factory(IAssetsService assets)
         {
             _assets = assets;
-            _updateService = updateService;
-            _inputService = inputService;
         }
 
         public List<IProgressReader> ProgressReaders { get; } = new();
@@ -43,12 +38,15 @@ namespace CodeBase.Infrastructure.Services.Factory
             return barrel;
         }
 
-        public async Task<WorkSpace> CreateWorkPlace(Vector3 position, float yRotation)
+        public async Task<WorkSpace> CreateWorkPlace(
+            IPumpingCommander commander, 
+            Vector3 position,
+            float yRotation)
         {
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.WorkSpace);
             
             WorkSpace workSpace = InstantiateRegistered(prefab).GetComponent<WorkSpace>();
-            workSpace.Construct(this, _inputService);
+            workSpace.Construct(commander, this);
             
             workSpace.transform.position = position;
             workSpace.transform.Rotate(0, yRotation, 0);

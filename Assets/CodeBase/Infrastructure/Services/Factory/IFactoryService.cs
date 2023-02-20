@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.GameLogic.WorkSpacing;
+using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Progress;
 using UnityEngine;
 
@@ -15,6 +16,6 @@ namespace CodeBase.Infrastructure.Services.Factory
         Task WarmUp();
         
         Task<Barrel> CreateBarrel(Vector3 position = new Vector3());
-        Task<WorkSpace> CreateWorkPlace(Vector3 position, float yRotation);
+        Task<WorkSpace> CreateWorkPlace(IPumpingCommander commander, Vector3 position, float yRotation);
     }
 }
