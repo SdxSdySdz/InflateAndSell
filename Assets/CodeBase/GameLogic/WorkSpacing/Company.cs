@@ -146,6 +146,8 @@ namespace CodeBase.GameLogic.WorkSpacing
                 await workSpace.StartWork();
                 add.Invoke(workSpace);
                 
+                _market.Upgrade();
+                
                 SaveProgress();
             }
             else 

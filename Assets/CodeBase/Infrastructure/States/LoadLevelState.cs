@@ -52,7 +52,7 @@ namespace CodeBase.Infrastructure.States
             _factoryService.WarmUp();
             _sceneLoader.Load(Scenes.GameLoop, EnterGameLoop);
             
-            _market = new Market();
+            _market = _factoryService.CreateMarket();
         }
 
         public void Exit()

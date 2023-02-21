@@ -18,6 +18,7 @@ namespace CodeBase.Infrastructure.Services.Factory
         Task WarmUp();
 
         Wallet CreateWallet();
+        Market CreateMarket();
         Task<Barrel> CreateBarrel(Vector3 position = new Vector3());
         Task<WorkSpace> CreateWorkPlace(
             IPumpingCommander commander, 

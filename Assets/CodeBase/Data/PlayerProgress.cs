@@ -9,6 +9,7 @@ namespace CodeBase.Data
         public LeverProgress Lever;
         public WalletProgress Wallet;
         public CompanyProgress Company;
+        public MarketProgress Market;
 
         public PlayerProgress()
         {
@@ -16,6 +17,7 @@ namespace CodeBase.Data
             Lever = new LeverProgress();
             Wallet = new WalletProgress();
             Company = new CompanyProgress();
+            Market = new MarketProgress();
         }
     }
 }

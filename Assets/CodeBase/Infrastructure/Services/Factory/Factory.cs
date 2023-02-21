@@ -7,7 +7,6 @@ using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Progress;
-using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.Factory
@@ -36,6 +35,14 @@ namespace CodeBase.Infrastructure.Services.Factory
             Register(wallet);
 
             return wallet;
+        }
+
+        public Market CreateMarket()
+        {
+            Market market = new Market();
+            Register(market);
+
+            return market;
         }
 
         public async Task<Barrel> CreateBarrel(Vector3 position = new Vector3())
