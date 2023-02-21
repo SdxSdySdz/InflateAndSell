@@ -16,9 +16,7 @@ namespace CodeBase.GameLogic.Player
             Amount = amount;
         }
 
-        public event Action<int> Changed;
-
-        private int Amount
+        public int Amount
         {
             get => _amount;
             
@@ -29,13 +27,7 @@ namespace CodeBase.GameLogic.Player
             }
         }
 
-        public void Add(int amount)
-        {
-            if (amount < 0)
-                throw new ArgumentOutOfRangeException(nameof(amount));
-            
-            Amount += amount;
-        }
+        public event Action<int> Changed;
 
         public void LoadProgress(PlayerProgress progress)
         {
@@ -45,6 +37,22 @@ namespace CodeBase.GameLogic.Player
         public void UpdateProgress(PlayerProgress progress)
         {
             progress.Wallet.Amount = Amount;
+        }
+
+        public void Add(int amount)
+        {
+            if (amount < 0)
+                throw new ArgumentOutOfRangeException(nameof(amount));
+            
+            Amount += amount;
+        }
+
+        public void Spent(int amount)
+        {
+            if (amount < 0)
+                throw new ArgumentOutOfRangeException(nameof(amount));
+            
+            Amount -= amount;
         }
     }
 }

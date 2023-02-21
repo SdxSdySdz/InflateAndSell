@@ -1,11 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CodeBase.Constants;
+using CodeBase.GameLogic.Marketing;
 using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.Services.Update;
 using CodeBase.Infrastructure.States.Core;
 using CodeBase.UI;
@@ -21,11 +22,11 @@ namespace CodeBase.Infrastructure.States
         private readonly IProgressService _progressService;
         private readonly IUpdateService _updateService;
         private readonly IInputService _inputService;
+        private readonly ISaveLoadService _saveLoadService;
 
+        private Market _market;
         private Company _company;
         private BuyWorkPlaceWindow _buyWorkPlaceWindow;
-
-        // private Player _player;
 
         public LoadLevelState(
             StateMachine stateMachine,
@@ -33,7 +34,8 @@ namespace CodeBase.Infrastructure.States
             IFactoryService factoryService,
             IProgressService progressService,
             IUpdateService updateService,
-            IInputService inputService
+            IInputService inputService,
+            ISaveLoadService saveLoadService
         ) : base(stateMachine)
         {
             _sceneLoader = sceneLoader;
@@ -41,6 +43,7 @@ namespace CodeBase.Infrastructure.States
             _progressService = progressService;
             _updateService = updateService;
             _inputService = inputService;
+            _saveLoadService = saveLoadService;
         }
 
         public void Enter()
@@ -48,6 +51,8 @@ namespace CodeBase.Infrastructure.States
             _factoryService.Cleanup();
             _factoryService.WarmUp();
             _sceneLoader.Load(Scenes.GameLoop, EnterGameLoop);
+            
+            _market = new Market();
         }
 
         public void Exit()
@@ -68,13 +73,13 @@ namespace CodeBase.Infrastructure.States
         private async Task InitWorld()
         {
             _company = Object.FindObjectOfType<Company>();
-            
+
             Wallet wallet = _factoryService.CreateWallet();
             
             WalletPresenter walletPresenter = Object.FindObjectOfType<WalletPresenter>();
             walletPresenter.Construct(wallet);
             
-            _company.Construct(wallet, _factoryService, _updateService, _inputService);
+            _company.Construct(_market, wallet, _factoryService, _updateService, _inputService, _saveLoadService);
             _factoryService.ProgressReaders.Add(_company);
             _factoryService.ProgressWriters.Add(_company);
         }
@@ -82,14 +87,13 @@ namespace CodeBase.Infrastructure.States
         private void InitUI()
         {
             _buyWorkPlaceWindow = Object.FindObjectOfType<BuyWorkPlaceWindow>();
+            _buyWorkPlaceWindow.Construct(_company, _market);
 
             RightTransitionButton rightTransitionButton = Object.FindObjectOfType<RightTransitionButton>();
             LeftTransitionButton leftTransitionButton = Object.FindObjectOfType<LeftTransitionButton>();
-
-            _buyWorkPlaceWindow.BuyButtonClicked += OnBuyButtonClicked;
             
-            rightTransitionButton.Clicked += TryToNextWorkSpace;
-            leftTransitionButton.Clicked += TryToPreviousWorkSpace;
+            rightTransitionButton.Construct(_company, _buyWorkPlaceWindow);
+            leftTransitionButton.Construct(_company, _buyWorkPlaceWindow);
         }
 
         private void InformProgressReaders()
@@ -98,41 +102,6 @@ namespace CodeBase.Infrastructure.States
             {
                 progressReader.LoadProgress(_progressService.Progress);
             }
-        }
-
-        private void OnBuyButtonClicked()
-        {
-            _buyWorkPlaceWindow.Hide();
-            
-            if (_company.IsCurrentWorkSpaceLast)
-                _company.ToNextWorkSpace();
-            else if (_company.IsCurrentWorkSpaceFirst)
-                _company.ToPreviousWorkSpace();
-            else
-                throw new InvalidOperationException("Trying to buy WorkSpace, " +
-                                                    "not being on the edges of company");
-        }
-        
-        private void TryToNextWorkSpace()
-        {
-            if (_company.IsCurrentWorkSpaceLast)
-            {
-                _buyWorkPlaceWindow.Show();
-                return;
-            }
-            
-            _company.ToNextWorkSpace();
-        }
-        
-        private void TryToPreviousWorkSpace()
-        {
-            if (_company.IsCurrentWorkSpaceFirst)
-            {
-                _buyWorkPlaceWindow.Show();
-                return;
-            }
-            
-            _company.ToPreviousWorkSpace();
         }
     }
 }

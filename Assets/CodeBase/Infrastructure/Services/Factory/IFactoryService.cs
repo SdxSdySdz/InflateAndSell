@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CodeBase.GameLogic.Marketing;
 using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
@@ -18,6 +19,12 @@ namespace CodeBase.Infrastructure.Services.Factory
 
         Wallet CreateWallet();
         Task<Barrel> CreateBarrel(Vector3 position = new Vector3());
-        Task<WorkSpace> CreateWorkPlace(IPumpingCommander commander, Wallet wallet, Vector3 position, float yRotation);
+        Task<WorkSpace> CreateWorkPlace(
+            IPumpingCommander commander, 
+            Market market,
+            Wallet wallet, 
+            Vector3 position, 
+            float yRotation
+            );
     }
 }

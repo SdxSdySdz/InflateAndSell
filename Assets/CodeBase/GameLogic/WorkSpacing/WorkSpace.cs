@@ -5,6 +5,7 @@ using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.Upgrading;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Factory;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.WorkSpacing
@@ -15,17 +16,17 @@ namespace CodeBase.GameLogic.WorkSpacing
         [SerializeField] private Hands _hands;
         [SerializeField] private Transform _barrelSpawn;
 
-        private Wallet _wallet;
+        private IPumpingCommander _commander;
         private Market _market;
+        private Wallet _wallet;
         private Barrel _barrel;
         private IFactoryService _factoryService;
-        private IPumpingCommander _commander;
 
-        public void Construct(IPumpingCommander commander, Wallet wallet, IFactoryService factoryService)
+        public void Construct(IPumpingCommander commander, Market market, Wallet wallet, IFactoryService factoryService)
         {
             _commander = commander;
+            _market = market;
             _wallet = wallet;
-            _market = new Market();
             _factoryService = factoryService;
             
             _commander.Settle(this);
@@ -49,13 +50,12 @@ namespace CodeBase.GameLogic.WorkSpacing
 
         private async Task PrepareNewBarrel()
         {
-            
             if (_barrel != null)
             {
                 _barrel.Overflowed -= PickUpBarrel;
                 Destroy(_barrel.gameObject);
             }
-
+            
             _barrel = await _factoryService.CreateBarrel();
 
             Place(_barrel);

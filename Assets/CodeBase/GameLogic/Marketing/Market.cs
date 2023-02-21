@@ -8,5 +8,10 @@ namespace CodeBase.GameLogic.Marketing
         {
             return 50;
         }
+
+        public int GetWorkSpaceCost()
+        {
+            return 42;
+        }
     }
 }

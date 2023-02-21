@@ -32,7 +32,8 @@ namespace CodeBase.Infrastructure.States.Core
                     services.Get<IFactoryService>(),
                     services.Get<IProgressService>(),
                     services.Get<IUpdateService>(),
-                    services.Get<IInputService>()
+                    services.Get<IInputService>(),
+                    services.Get<ISaveLoadService>()
                     ) },
                 { typeof(GameLoopState), new GameLoopState(
                     this

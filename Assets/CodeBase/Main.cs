@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Agava.YandexGames;
 using CodeBase.GameLogic;
@@ -18,6 +17,10 @@ namespace CodeBase
         private void Awake()
         {
             YandexGamesSdk.CallbackLogging = true;
+
+            const bool isProgressClearingNeeded = false;
+            if (isProgressClearingNeeded)
+                PlayerPrefs.DeleteAll();
         }
 
         private IEnumerator Start()

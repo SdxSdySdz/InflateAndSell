@@ -1,4 +1,5 @@
 ﻿using System;
+using CodeBase.GameLogic.WorkSpacing;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,27 +10,43 @@ namespace CodeBase.UI.Transition
     public abstract class TransitionButton : MonoBehaviour
     {
         private Button _button;
-
-        public event UnityAction Clicked;
-
+        private BuyWorkPlaceWindow _buyWorkPlaceWindow;
+        
+        protected Company Company { get; private set; }
+        protected abstract bool IsNeedToBuy { get; }
+        
         private void Awake()
         {
             _button = GetComponent<Button>();
         }
 
+        public void Construct(Company company, BuyWorkPlaceWindow buyWorkPlaceWindow)
+        {
+            Company = company;
+            _buyWorkPlaceWindow = buyWorkPlaceWindow;
+        }
+
         private void OnEnable()
         {
-            _button.onClick.AddListener(OnClicked);
+            _button.onClick.AddListener(TryToOtherWorkSpace);
         }
         
         private void OnDisable()
         {
-            _button.onClick.RemoveListener(OnClicked);
+            _button.onClick.RemoveListener(TryToOtherWorkSpace);
         }
 
-        private void OnClicked()
+        protected abstract void ToOtherWorkSpace();
+        
+        private void TryToOtherWorkSpace()
         {
-            Clicked?.Invoke();
+            if (IsNeedToBuy)
+            {
+                _buyWorkPlaceWindow.Show();
+                return;
+            }
+            
+            ToOtherWorkSpace();
         }
     }
 }

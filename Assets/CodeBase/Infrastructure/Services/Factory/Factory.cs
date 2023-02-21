@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeBase.Constants;
+using CodeBase.GameLogic.Marketing;
 using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Assets;
 using CodeBase.Infrastructure.Services.Progress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.Factory
@@ -49,6 +51,7 @@ namespace CodeBase.Infrastructure.Services.Factory
 
         public async Task<WorkSpace> CreateWorkPlace(
             IPumpingCommander commander,
+            Market market,
             Wallet wallet,
             Vector3 position,
             float yRotation)
@@ -56,7 +59,7 @@ namespace CodeBase.Infrastructure.Services.Factory
             GameObject prefab = await _assets.Load<GameObject>(AssetAddress.WorkSpace);
             
             WorkSpace workSpace = InstantiateRegistered(prefab).GetComponent<WorkSpace>();
-            workSpace.Construct(commander, wallet, this);
+            workSpace.Construct(commander, market, wallet, this);
             
             workSpace.transform.position = position;
             workSpace.transform.Rotate(0, yRotation, 0);
