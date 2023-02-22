@@ -17,10 +17,6 @@ namespace CodeBase
         private void Awake()
         {
             YandexGamesSdk.CallbackLogging = true;
-
-            const bool isProgressClearingNeeded = false;
-            if (isProgressClearingNeeded)
-                PlayerPrefs.DeleteAll();
         }
 
         private IEnumerator Start()

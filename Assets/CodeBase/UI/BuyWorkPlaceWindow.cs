@@ -1,9 +1,9 @@
 ﻿using System;
 using CodeBase.GameLogic.Marketing;
+using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.WorkSpacing;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace CodeBase.UI
@@ -17,16 +17,20 @@ namespace CodeBase.UI
 
         private Company _company;
         private Market _market;
+        private Wallet _wallet;
         
         private void Awake()
         {
             Hide();
         }
 
-        public void Construct(Company company, Market market)
+        public void Construct(Company company, Market market, Wallet wallet)
         {
             _company= company;
             _market = market;
+            _wallet = wallet;
+
+            _wallet.Changed += UpdateButtonInteractability;
         }
 
         private void OnEnable()
@@ -52,7 +56,12 @@ namespace CodeBase.UI
         {
             _model.SetActive(false);
         }
-        
+
+        private void UpdateButtonInteractability(int _)
+        {
+            _buyButton.interactable = _company.CanBuyWorkSpace;
+        }
+
         private void OnBuyButtonClicked()
         {
             Hide();

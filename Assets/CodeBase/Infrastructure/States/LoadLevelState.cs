@@ -27,6 +27,7 @@ namespace CodeBase.Infrastructure.States
         private Market _market;
         private Company _company;
         private BuyWorkPlaceWindow _buyWorkPlaceWindow;
+        private Wallet _wallet;
 
         public LoadLevelState(
             StateMachine stateMachine,
@@ -74,12 +75,12 @@ namespace CodeBase.Infrastructure.States
         {
             _company = Object.FindObjectOfType<Company>();
 
-            Wallet wallet = _factoryService.CreateWallet();
+            _wallet = _factoryService.CreateWallet();
             
             WalletPresenter walletPresenter = Object.FindObjectOfType<WalletPresenter>();
-            walletPresenter.Construct(wallet);
+            walletPresenter.Construct(_wallet);
             
-            _company.Construct(_market, wallet, _factoryService, _updateService, _inputService, _saveLoadService);
+            _company.Construct(_market, _wallet, _factoryService, _updateService, _inputService, _saveLoadService);
             _factoryService.ProgressReaders.Add(_company);
             _factoryService.ProgressWriters.Add(_company);
         }
@@ -87,7 +88,7 @@ namespace CodeBase.Infrastructure.States
         private void InitUI()
         {
             _buyWorkPlaceWindow = Object.FindObjectOfType<BuyWorkPlaceWindow>();
-            _buyWorkPlaceWindow.Construct(_company, _market);
+            _buyWorkPlaceWindow.Construct(_company, _market, _wallet);
 
             RightTransitionButton rightTransitionButton = Object.FindObjectOfType<RightTransitionButton>();
             LeftTransitionButton leftTransitionButton = Object.FindObjectOfType<LeftTransitionButton>();
