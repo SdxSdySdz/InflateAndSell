@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using CodeBase.Data;
-using TMPro;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.Upgrading

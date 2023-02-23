@@ -1682,6 +1682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6647679991730941579}
   - component: {fileID: 6647679991721935169}
+  - component: {fileID: 8313668808996290989}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -1726,6 +1727,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8313668808996290989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6647679991731434219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f81733f4eac44f9946d820637ec716c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 6647679991726161799}
+  _shadeBrightness: 0.72
 --- !u!1 &6647679991731434221
 GameObject:
   m_ObjectHideFlags: 0
@@ -2260,6 +2275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69670d1512394badba72144ff04df7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _character: {fileID: 8313668808996290989}
   _pump: {fileID: 3709222933950775566}
   _hands: {fileID: 1689300350}
   _barrelSpawn: {fileID: 3709222934643372569}

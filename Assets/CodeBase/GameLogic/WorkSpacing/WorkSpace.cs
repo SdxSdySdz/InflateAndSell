@@ -5,13 +5,13 @@ using CodeBase.GameLogic.Player;
 using CodeBase.GameLogic.Upgrading;
 using CodeBase.GameLogic.WorkSpacing.Commanders;
 using CodeBase.Infrastructure.Services.Factory;
-using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.GameLogic.WorkSpacing
 {
     public class WorkSpace : MonoBehaviour
     {
+        [SerializeField] private Character _character;
         [SerializeField] private Pump _pump;
         [SerializeField] private Hands _hands;
         [SerializeField] private Transform _barrelSpawn;
